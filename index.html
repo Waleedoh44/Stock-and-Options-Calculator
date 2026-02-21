@@ -140,8 +140,8 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
 
 <!-- ══ Top shared stats ════════════════════════════════════════ -->
 <div class="topbar">
-  <div class="tstat"><div class="tv gldc" id="t-sunits">280</div> <div class="tk">أسهم للصفقة</div></div>
-  <div class="tstat"><div class="tv gldc" id="t-cunits">10</div>  <div class="tk">عقود للصفقة</div></div>
+  <div class="tstat"><div class="tv gldc" id="t-sunits">200</div> <div class="tk">أسهم للصفقة</div></div>
+  <div class="tstat"><div class="tv gldc" id="t-cunits">12</div>  <div class="tk">عقود للصفقة</div></div>
   <div class="tstat"><div class="tv gc"   id="t-srr">1:4.0</div>  <div class="tk">R/R أسهم</div></div>
   <div class="tstat"><div class="tv gc"   id="t-crr">1:2.5</div>  <div class="tk">R/R عقود</div></div>
 </div>
@@ -154,8 +154,8 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
   <div class="card">
     <div class="ch">📈 أسهم</div>
     <div class="cb">
-      <div class="ir"><label>رأس المال $</label>     <input type="number" id="s-cap"    value="2100" step="100"  oninput="calc()"></div>
-      <div class="ir"><label>نسبة المخاطرة %</label> <input type="number" id="s-risk"   value="2"    step="0.1"  oninput="calc()"></div>
+      <div class="ir"><label>رأس المال $</label>     <input type="number" id="s-cap"    value="1000" step="100"  oninput="calc()"></div>
+      <div class="ir"><label>نسبة المخاطرة %</label> <input type="number" id="s-risk"   value="3"    step="0.1"  oninput="calc()"></div>
       <div class="ir"><label>سعر الشراء $</label>    <input type="number" id="s-buy"    value="4.00" step="0.01" oninput="calc()"></div>
       <div class="ir"><label>وقف الخسارة $</label>   <input type="number" id="s-stop"   value="3.85" step="0.01" oninput="calc()"></div>
       <div class="ir"><label>سعر الهدف $</label>     <input type="number" id="s-target" value="4.60" step="0.01" oninput="calc()"></div>
@@ -166,8 +166,8 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
   <div class="card">
     <div class="ch">📜 عقود</div>
     <div class="cb">
-      <div class="ir"><label>رأس المال $</label>     <input type="number" id="c-cap"  value="800"  step="50"   oninput="calc()"></div>
-      <div class="ir"><label>نسبة المخاطرة %</label> <input type="number" id="c-risk" value="2"    step="0.1"  oninput="calc()"></div>
+      <div class="ir"><label>رأس المال $</label>     <input type="number" id="c-cap"  value="1000"  step="50"   oninput="calc()"></div>
+      <div class="ir"><label>نسبة المخاطرة %</label> <input type="number" id="c-risk" value="5"    step="0.1"  oninput="calc()"></div>
       <div class="ir"><label>سعر الشراء $</label>    <input type="number" id="c-buy"  value="0.27" step="0.01" oninput="calc()"></div>
       <div class="ir"><label>وقف الخسارة $</label>   <input type="number" id="c-stop" value="0.23" step="0.01" oninput="calc()"></div>
       <div class="ir"><label>سعر الهدف $</label>     <input type="number" id="c-sell" value="0.37" step="0.01" oninput="calc()"></div>
@@ -184,14 +184,14 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
   <div class="card">
     <div class="ch">📈 أسهم — نتائج</div>
     <div class="cb">
-      <div class="bign"><div class="n gldc" id="s-nd">280</div><div class="s">عدد الأسهم للصفقة</div></div>
-      <div class="rr"><span class="rl">قيمة الصفقة</span>              <span class="rv wc"   id="s-tv">$1,332.00</span></div>
-      <div class="rr"><span class="rl">رأس المال المتبقي</span>        <span class="rv gc"   id="s-rem">$332.00</span></div>
+      <div class="bign"><div class="n gldc" id="s-nd">200</div><div class="s">عدد الأسهم للصفقة</div></div>
+      <div class="rr"><span class="rl">قيمة الصفقة</span>              <span class="rv wc"   id="s-tv">$800.00</span></div>
+      <div class="rr"><span class="rl">رأس المال المتبقي</span>        <span class="rv gc"   id="s-rem">$200.00</span></div>
       <div class="rr"><span class="rl">نسبة الربح عند الهدف</span>    <span class="rv gc"   id="s-pp2">15.00%</span></div>
       <div class="rr"><span class="rl">نسبة الخسارة في الصفقة</span>  <span class="rv rc"   id="s-lp">3.75%</span></div>
-      <div class="rr"><span class="rl">أقصى مبلغ للمخاطرة</span>      <span class="rv gldc" id="s-maxr">$50.00</span></div>
+      <div class="rr"><span class="rl">أقصى مبلغ للمخاطرة</span>      <span class="rv gldc" id="s-maxr">$30.00</span></div>
       <div class="rr"><span class="rl">الفرق (سعر − وقف)</span>       <span class="rv wc"   id="s-diff">0.15</span></div>
-      <div class="rr"><span class="rl">عمولة شراء + بيع</span>        <span class="rv gldc" id="s-comm">$3.83</span></div>
+      <div class="rr"><span class="rl">عمولة شراء + بيع</span>        <span class="rv gldc" id="s-comm">$2.30</span></div>
     </div>
   </div>
 
@@ -199,7 +199,7 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
   <div class="card">
     <div class="ch">📜 عقود — نتائج</div>
     <div class="cb">
-      <div class="bign"><div class="n gldc" id="c-nd">10</div><div class="s">عدد العقود الفعلية (مبنى على المخاطرة)</div></div>
+      <div class="bign"><div class="n gldc" id="c-nd">12</div><div class="s">عدد العقود الفعلية (مبنى على المخاطرة)</div></div>
       <div class="rr"><span class="rl">قيمة الصفقة الفعلية</span>            <span class="rv wc"   id="c-tv">$324.00</span></div>
       <div class="rr"><span class="rl">رأس المال المتبقي</span>              <span class="rv gc"   id="c-rem">$676.00</span></div>
       <div class="rr"><span class="rl">نسبة الربح عند الهدف</span>          <span class="rv gc"   id="c-pp">37.04%</span></div>
@@ -219,18 +219,18 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
     <div class="ptitle gc">🟢 الربح عند البيع</div>
     <div class="pgrid">
       <div class="pi"><div class="pl">ربح %</div>       <div class="pv gc" id="s-pp">15.00%</div></div>
-      <div class="pi"><div class="pl">ربح × أسهم</div>  <div class="pv gc" id="s-pc">0.60×333</div></div>
-      <div class="pi"><div class="pl">بالدولار $</div>   <div class="pv gc" id="s-pu">$199.80</div></div>
-      <div class="pi"><div class="pl">بالريال ر.س</div>  <div class="pv gc" id="s-ps">ر.س 749.25</div></div>
+      <div class="pi"><div class="pl">ربح × أسهم</div>  <div class="pv gc" id="s-pc">0.60×200</div></div>
+      <div class="pi"><div class="pl">بالدولار $</div>   <div class="pv gc" id="s-pu">$120.00</div></div>
+      <div class="pi"><div class="pl">بالريال ر.س</div>  <div class="pv gc" id="s-ps">ر.س 450.00</div></div>
     </div>
   </div>
   <div class="pc loss">
     <div class="ptitle rc">🔴 الخسارة عند الوقف</div>
     <div class="pgrid">
       <div class="pi"><div class="pl">خسارة %</div>      <div class="pv rc" id="s-lpc">-3.75%</div></div>
-      <div class="pi"><div class="pl">خسارة × أسهم</div><div class="pv rc" id="s-lc">-0.15×333</div></div>
-      <div class="pi"><div class="pl">بالدولار $</div>   <div class="pv rc" id="s-lu">-$49.95</div></div>
-      <div class="pi"><div class="pl">بالريال ر.س</div>  <div class="pv rc" id="s-ls">ر.س -187.31</div></div>
+      <div class="pi"><div class="pl">خسارة × أسهم</div><div class="pv rc" id="s-lc">-0.15×200</div></div>
+      <div class="pi"><div class="pl">بالدولار $</div>   <div class="pv rc" id="s-lu">-$30.00</div></div>
+      <div class="pi"><div class="pl">بالريال ر.س</div>  <div class="pv rc" id="s-ls">ر.س -112.50</div></div>
     </div>
   </div>
 </div>
@@ -332,13 +332,12 @@ var FX         = 3.75;   // USD → SAR exchange rate (fixed)
 // Stocks commission constants
 var S_RATE     = 0.005;  // $ per share
 var S_MIN      = 1.00;   // minimum $ per side (buy OR sell)
-var S_ADJ      = 1.15;   // adjustment multiplier to include VAT
+var S_ADJ      = 1.15;   // adjustment multiplier (to include VAT)
 
 // Contracts commission constants
-var C_RATE     = 1.15;   // $ per contract per side VAT included
+var C_RATE     = 1.00;   // $ per contract per side
 var C_MIN      = 1.99;   // minimum $ per side (buy OR sell)
-// Formula: IF(n > C_MIN, 2*n*C_RATE, 2*C_MIN*C_RATE)
-// i.e. minimum charged is 2*C_MIN*C_RATE regardless of contract count
+var C_ADJ      = 1.15;   // adjustment multiplier (to include VAT)
 
 var C_MULT     = 100;    // contract size multiplier
 
@@ -376,7 +375,7 @@ function sComm(n) {
 // Applies the IF logic: minimum floor of C_MIN per side
 function cComm(n) {
   var perSide = Math.max(C_MIN, n * C_RATE);
-  return 2 * perSide;
+  return 2 * perSide * C_ADJ;
 }
 // Note: C_RATE here IS the per-contract fee in $, C_MIN is the floor per side.
 // So: if n*C_RATE < C_MIN → charge 2*C_MIN; else charge 2*n*C_RATE
@@ -448,7 +447,7 @@ function calc() {
   // Max contracts: n * buy * MULT + cComm(n) ≤ capital
   var cMaxN = 0;
   if (cBUY > 0) {
-    cMaxN = Math.floor(cCAP / (cBUY * C_MULT + 2 * C_RATE));
+    cMaxN = Math.floor(cCAP / (cBUY * C_MULT + 2 * C_RATE * C_ADJ));
     while (cMaxN > 0 && (cMaxN * cBUY * C_MULT + cComm(cMaxN)) > cCAP) { cMaxN--; }
     while (((cMaxN + 1) * cBUY * C_MULT + cComm(cMaxN + 1)) <= cCAP) { cMaxN++; }
   }
