@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حاسبة الأسهم والعقود</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0e1a;--sur:#111827;--sur2:#1a2235;
+  --gold:#f0b429;--gdim:#b8841f;
+  --green:#22c55e;--gdark:#166534;
+  --red:#ef4444;--rdark:#7f1d1d;
+  --blue:#3b82f6;
+  --txt:#e2e8f0;--mut:#64748b;--bdr:#1e293b;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 10% 15%,rgba(240,180,41,.07) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 45% at 90% 85%,rgba(34,197,94,.06) 0%,transparent 55%),
+    radial-gradient(ellipse 50% 40% at 50% 50%,rgba(59,130,246,.04) 0%,transparent 60%);}
+.page{max-width:1300px;margin:0 auto;padding:20px 16px;position:relative;z-index:1;}
+
+/* Header */
+header{text-align:center;padding:28px 0 20px;animation:fadeD .6s ease both;}
+.badge{display:inline-block;background:linear-gradient(135deg,var(--gdim),var(--gold));
+  color:#000;font-size:20px;font-weight:800;letter-spacing:3px;padding:4px 18px;
+  border-radius:20px;margin-bottom:10px;text-transform:uppercase;}
+h1{font-size:clamp(22px,4vw,42px);font-weight:900;
+  background:linear-gradient(135deg,#fff 0%,var(--gold) 55%,#fff 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;}
+.sub{color:var(--mut);font-size:12px;}
+
+/* ── Shared top stats ── */
+.topbar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;animation:fadeU .4s ease both;}
+@media(max-width:600px){.topbar{grid-template-columns:repeat(2,1fr);}}
+.tstat{background:var(--sur);border:1px solid var(--bdr);border-radius:12px;padding:12px 10px;text-align:center;}
+.tstat .tv{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;margin-bottom:3px;}
+.tstat .tk{font-size:9px;color:var(--mut);letter-spacing:.5px;text-transform:uppercase;}
+
+/* ── Section divider ── */
+.divider{display:flex;align-items:center;gap:10px;margin:18px 0 12px;
+  font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--mut);}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--bdr);}
+
+/* ── Two-col grid ── */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:768px){.duo{grid-template-columns:1fr;}}
+
+/* ── Card ── */
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;animation:fadeU .5s ease both;}
+.ch{background:var(--sur2);padding:11px 18px;font-size:10px;font-weight:800;letter-spacing:1.5px;
+  color:var(--gold);border-bottom:1px solid var(--bdr);text-transform:uppercase;}
+.cb{padding:16px;}
+
+/* ── Input row ── */
+.ir{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bdr);gap:10px;}
+.ir:last-child{border-bottom:none;}
+.ir label{font-size:13px;color:var(--mut);flex:1;font-weight:500;}
+.ir input{background:var(--sur2);border:1px solid var(--bdr);border-radius:8px;
+  color:var(--gold);font-family:'Space Mono',monospace;font-size:15px;font-weight:700;
+  padding:7px 12px;width:120px;text-align:center;outline:none;transition:all .2s;}
+.ir input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,180,41,.12);}
+
+/* ── Result row ── */
+.rr{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bdr);}
+.rr:last-child{border-bottom:none;}
+.rl{font-size:12px;color:var(--mut);font-weight:500;}
+.rv{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;}
+
+/* ── Big number ── */
+.bign{text-align:center;padding:12px 8px 8px;}
+.bign .n{font-family:'Space Mono',monospace;font-size:clamp(28px,5vw,46px);font-weight:700;line-height:1;}
+.bign .s{font-size:10px;color:var(--mut);margin-top:4px;}
+
+/* ── PnL cards ── */
+.pnl-duo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:600px){.pnl-duo{grid-template-columns:1fr;}}
+.pc{border-radius:14px;padding:14px;}
+.pc.profit{background:linear-gradient(135deg,#052e16,#14532d);border:1px solid var(--gdark);}
+.pc.loss{background:linear-gradient(135deg,#450a0a,#7f1d1d);border:1px solid var(--rdark);}
+.ptitle{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;opacity:.8;}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.pi{background:rgba(0,0,0,.22);border-radius:9px;padding:9px 10px;text-align:center;}
+.pl{font-size:9px;opacity:.6;margin-bottom:3px;}
+.pv{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;}
+
+/* ── Max section ── */
+.max-card{background:var(--sur);border:1px solid var(--bdr);border-radius:16px;padding:16px;margin-bottom:14px;}
+.mh{font-size:10px;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase;font-weight:800;margin-bottom:12px;}
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+@media(max-width:500px){.mgrid{grid-template-columns:1fr;}}
+.mi{border-radius:11px;padding:12px;text-align:center;}
+.ml{font-size:9px;color:var(--mut);margin-bottom:5px;}
+.mv{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;}
+.ms{font-size:9px;color:var(--mut);margin-top:4px;}
+.mn{background:var(--sur2);border:1px solid var(--bdr);}
+.mp{background:rgba(34,197,94,.1);border:1px solid var(--gdark);}
+.mr{background:rgba(239,68,68,.1);border:1px solid var(--rdark);}
+
+/* ── Risk meter ── */
+.rmeter{background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:16px;margin-bottom:14px;}
+.rmtitle{font-size:10px;color:var(--mut);letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:10px;}
+.rmtrack{background:var(--sur2);border-radius:999px;height:9px;overflow:hidden;margin-bottom:7px;}
+.rmfill{height:100%;border-radius:999px;
+  background:linear-gradient(90deg,var(--green) 0%,var(--gold) 50%,var(--red) 100%);
+  transition:width .5s cubic-bezier(.4,2,.6,1);}
+.rmlabels{display:flex;justify-content:space-between;font-size:9px;color:var(--mut);}
+
+/* ── RR cards ── */
+.rr-card{background:linear-gradient(135deg,#1a1a0a,#2a2200);border:2px solid var(--gold);
+  border-radius:16px;padding:20px;text-align:center;position:relative;overflow:hidden;}
+.rr-card::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(240,180,41,.1) 0%,transparent 70%);}
+.rrl{font-size:10px;color:var(--gdim);letter-spacing:3px;font-weight:800;text-transform:uppercase;margin-bottom:5px;}
+.rrv{font-family:'Space Mono',monospace;font-size:40px;font-weight:700;color:var(--gold);line-height:1;}
+.rrd{font-size:11px;color:var(--mut);margin-top:5px;}
+
+/* Colors */
+.gc{color:var(--green);}.rc{color:var(--red);}.gldc{color:var(--gold);}.bc{color:var(--blue);}.wc{color:#fff;}
+
+.foot{text-align:center;padding:20px 0 8px;font-size:10px;color:var(--mut);letter-spacing:1px;}
+
+@keyframes fadeU{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeD{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.07)}100%{transform:scale(1)}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ Header ══════════════════════════════════════════════════ -->
+<header>
+  <div class="badge">⚡ إدارة المخاطر المتقدمة</div>
+  <h1>حاسبة الأسهم والعقود</h1>
+  <p class="sub">احسب الحجم المثالي للصفقة بناءً على رأس مالك ونسبة المخاطرة</p>
+</header>
+
+<!-- ══ Top shared stats ════════════════════════════════════════ -->
+<div class="topbar">
+  <div class="tstat"><div class="tv gldc" id="t-sunits">280</div> <div class="tk">أسهم للصفقة</div></div>
+  <div class="tstat"><div class="tv gldc" id="t-cunits">10</div>  <div class="tk">عقود للصفقة</div></div>
+  <div class="tstat"><div class="tv gc"   id="t-srr">1:4.0</div>  <div class="tk">R/R أسهم</div></div>
+  <div class="tstat"><div class="tv gc"   id="t-crr">1:2.5</div>  <div class="tk">R/R عقود</div></div>
+</div>
+
+<!-- ══ INPUTS ══════════════════════════════════════════════════ -->
+<div class="divider">⚙️ بيانات الصفقة</div>
+<div class="duo">
+
+  <!-- Stocks inputs -->
+  <div class="card">
+    <div class="ch">📈 أسهم</div>
+    <div class="cb">
+      <div class="ir"><label>رأس المال $</label>     <input type="number" id="s-cap"    value="2100" step="100"  oninput="calc()"></div>
+      <div class="ir"><label>نسبة المخاطرة %</label> <input type="number" id="s-risk"   value="2"    step="0.1"  oninput="calc()"></div>
+      <div class="ir"><label>سعر الشراء $</label>    <input type="number" id="s-buy"    value="4.00" step="0.01" oninput="calc()"></div>
+      <div class="ir"><label>وقف الخسارة $</label>   <input type="number" id="s-stop"   value="3.85" step="0.01" oninput="calc()"></div>
+      <div class="ir"><label>سعر الهدف $</label>     <input type="number" id="s-target" value="4.60" step="0.01" oninput="calc()"></div>
+    </div>
+  </div>
+
+  <!-- Contracts inputs -->
+  <div class="card">
+    <div class="ch">📜 عقود</div>
+    <div class="cb">
+      <div class="ir"><label>رأس المال $</label>     <input type="number" id="c-cap"  value="800"  step="50"   oninput="calc()"></div>
+      <div class="ir"><label>نسبة المخاطرة %</label> <input type="number" id="c-risk" value="2"    step="0.1"  oninput="calc()"></div>
+      <div class="ir"><label>سعر الشراء $</label>    <input type="number" id="c-buy"  value="0.27" step="0.01" oninput="calc()"></div>
+      <div class="ir"><label>وقف الخسارة $</label>   <input type="number" id="c-stop" value="0.23" step="0.01" oninput="calc()"></div>
+      <div class="ir"><label>سعر الهدف $</label>     <input type="number" id="c-sell" value="0.37" step="0.01" oninput="calc()"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ RESULTS ════════════════════════════════════════════════ -->
+<div class="divider">📊 نتائج الحساب</div>
+<div class="duo">
+
+  <!-- Stocks results -->
+  <div class="card">
+    <div class="ch">📈 أسهم — نتائج</div>
+    <div class="cb">
+      <div class="bign"><div class="n gldc" id="s-nd">280</div><div class="s">عدد الأسهم للصفقة</div></div>
+      <div class="rr"><span class="rl">قيمة الصفقة</span>              <span class="rv wc"   id="s-tv">$1,120.00</span></div>
+      <div class="rr"><span class="rl">رأس المال المتبقي</span>        <span class="rv gc"   id="s-rem">$980.00</span></div>
+      <div class="rr"><span class="rl">نسبة الربح عند الهدف</span>    <span class="rv gc"   id="s-pp2">15.00%</span></div>
+      <div class="rr"><span class="rl">نسبة الخسارة في الصفقة</span>  <span class="rv rc"   id="s-lp">3.75%</span></div>
+      <div class="rr"><span class="rl">أقصى مبلغ للمخاطرة</span>      <span class="rv gldc" id="s-maxr">$42.00</span></div>
+      <div class="rr"><span class="rl">الفرق (سعر − وقف)</span>       <span class="rv wc"   id="s-diff">0.15</span></div>
+      <div class="rr"><span class="rl">عمولة شراء + بيع</span>        <span class="rv gldc" id="s-comm">$3.22</span></div>
+    </div>
+  </div>
+
+  <!-- Contracts results -->
+  <div class="card">
+    <div class="ch">📜 عقود — نتائج</div>
+    <div class="cb">
+      <div class="bign"><div class="n gldc" id="c-nd">10</div><div class="s">عدد العقود الفعلية (مبنى على المخاطرة)</div></div>
+      <div class="rr"><span class="rl">قيمة الصفقة الفعلية</span>            <span class="rv wc"   id="c-tv">$270.00</span></div>
+      <div class="rr"><span class="rl">رأس المال المتبقي</span>              <span class="rv gc"   id="c-rem">$530.00</span></div>
+      <div class="rr"><span class="rl">نسبة الربح عند الهدف</span>          <span class="rv gc"   id="c-pp">37.04%</span></div>
+      <div class="rr"><span class="rl">نسبة الخسارة عند الوقف</span>        <span class="rv rc"   id="c-lp">14.81%</span></div>
+      <div class="rr"><span class="rl">أقصى مبلغ للمخاطرة</span>            <span class="rv gldc" id="c-maxr">$16.00</span></div>
+      <div class="rr"><span class="rl">الفرق (سعر − وقف)</span>             <span class="rv wc"   id="c-diff">$0.04</span></div>
+      <div class="rr"><span class="rl">عمولة شراء + بيع</span>              <span class="rv gldc" id="c-comm">$23.00</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ PnL ════════════════════════════════════════════════════ -->
+<div class="divider">📈 أسهم — الربح والخسارة</div>
+<div class="pnl-duo">
+  <div class="pc profit">
+    <div class="ptitle gc">🟢 الربح عند البيع</div>
+    <div class="pgrid">
+      <div class="pi"><div class="pl">ربح %</div>       <div class="pv gc" id="s-pp">15.00%</div></div>
+      <div class="pi"><div class="pl">ربح × أسهم</div>  <div class="pv gc" id="s-pc">0.60×280</div></div>
+      <div class="pi"><div class="pl">بالدولار $</div>   <div class="pv gc" id="s-pu">$168.00</div></div>
+      <div class="pi"><div class="pl">بالريال ر.س</div>  <div class="pv gc" id="s-ps">ر.س 630</div></div>
+    </div>
+  </div>
+  <div class="pc loss">
+    <div class="ptitle rc">🔴 الخسارة عند الوقف</div>
+    <div class="pgrid">
+      <div class="pi"><div class="pl">خسارة %</div>      <div class="pv rc" id="s-lpc">-3.75%</div></div>
+      <div class="pi"><div class="pl">خسارة × أسهم</div><div class="pv rc" id="s-lc">-0.15×280</div></div>
+      <div class="pi"><div class="pl">بالدولار $</div>   <div class="pv rc" id="s-lu">-$42.00</div></div>
+      <div class="pi"><div class="pl">بالريال ر.س</div>  <div class="pv rc" id="s-ls">ر.س -157</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider">📜 عقود — الربح والخسارة</div>
+<div class="pnl-duo">
+  <div class="pc profit">
+    <div class="ptitle gc">🟢 الربح عند البيع</div>
+    <div class="pgrid">
+      <div class="pi"><div class="pl">ربح %</div>       <div class="pv gc" id="c-pp">37.04%</div></div>
+      <div class="pi"><div class="pl">ربح × عقود</div>  <div class="pv gc" id="c-pc">0.10×10</div></div>
+      <div class="pi"><div class="pl">بالدولار $</div>   <div class="pv gc" id="c-pu">$77.00</div></div>
+      <div class="pi"><div class="pl">بالريال ر.س</div>  <div class="pv gc" id="c-ps">ر.س 289</div></div>
+    </div>
+  </div>
+  <div class="pc loss">
+    <div class="ptitle rc">🔴 الخسارة عند الوقف</div>
+    <div class="pgrid">
+      <div class="pi"><div class="pl">خسارة %</div>      <div class="pv rc" id="c-lpc">-14.81%</div></div>
+      <div class="pi"><div class="pl">خسارة × عقود</div><div class="pv rc" id="c-lc">-0.04×10</div></div>
+      <div class="pi"><div class="pl">بالدولار $</div>   <div class="pv rc" id="c-lu">-$63.00</div></div>
+      <div class="pi"><div class="pl">بالريال ر.س</div>  <div class="pv rc" id="c-ls">ر.س -236</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAX SECTION ════════════════════════════════════════════ -->
+<div class="divider">🚀 بحجم أقصى — أسهم / عقود ممكنة (بعد خصم العمولة)</div>
+<div class="duo">
+
+  <div class="max-card">
+    <div class="mh">📈 أسهم</div>
+    <div class="mgrid">
+      <div class="mi mn">
+        <div class="ml">عدد الأسهم الممكن</div>
+        <div class="mv bc"  id="s-maxn">524</div>
+        <div class="ms"    id="s-minfo">تكلفة $2,096 + عمولة $6.03</div>
+      </div>
+      <div class="mi mp">
+        <div class="ml">ربح ممكن $</div>
+        <div class="mv gc" id="s-mpu">$314.40</div>
+        <div class="ms"    id="s-mps">ر.س 1,179</div>
+      </div>
+      <div class="mi mr">
+        <div class="ml">خسارة ممكنة $</div>
+        <div class="mv rc" id="s-mlu">-$78.60</div>
+        <div class="ms"    id="s-mls">ر.س -294</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-card">
+    <div class="mh">📜 عقود</div>
+    <div class="mgrid">
+      <div class="mi mn">
+        <div class="ml">عدد العقود الممكن</div>
+        <div class="mv bc"  id="c-maxn">29</div>
+        <div class="ms"    id="c-minfo">تكلفة $783 + عمولة $66.70</div>
+      </div>
+      <div class="mi mp">
+        <div class="ml">ربح ممكن $</div>
+        <div class="mv gc" id="c-mpu">$290.00</div>
+        <div class="ms"    id="c-mps">ر.س 1,088</div>
+      </div>
+      <div class="mi mr">
+        <div class="ml">خسارة ممكنة $</div>
+        <div class="mv rc" id="c-mlu">-$116.00</div>
+        <div class="ms"    id="c-mls">ر.س -435</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ RR ══════════════════════════════════════════════════════ -->
+<div class="divider">⚖️ نسبة العائد إلى المخاطرة</div>
+<div class="duo" style="margin-bottom:20px">
+  <div class="rr-card">
+    <div class="rrl">أسهم — R / R</div>
+    <div class="rrv" id="s-rrv">1 : 4.0</div>
+    <div class="rrd" id="s-rrd">ممتاز — تخاطر بـ 1 للربح 4.0</div>
+  </div>
+  <div class="rr-card">
+    <div class="rrl">عقود — R / R</div>
+    <div class="rrv" id="c-rrv">1 : 2.5</div>
+    <div class="rrd" id="c-rrd">جيد — نسبة مقبولة للمتداولين</div>
+  </div>
+</div>
+
+<div class="foot">⚡ حاسبة أسهم / عقود للمتداولين المحترفين • إدارة المخاطر هي أساس النجاح</div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════
+   CONSTANTS — all hidden from UI
+   ════════════════════════════════════════════════════ */
+var FX         = 3.75;   // USD → SAR exchange rate (fixed)
+
+// Stocks commission constants
+var S_RATE     = 0.005;  // $ per share
+var S_MIN      = 1.00;   // minimum $ per side (buy OR sell)
+var S_ADJ      = 1.15;   // adjustment multiplier to include VAT
+
+// Contracts commission constants
+var C_RATE     = 1.15;   // $ per contract per side VAT included
+var C_MIN      = 1.99;   // minimum $ per side (buy OR sell)
+// Formula: IF(n > C_MIN, 2*n*C_RATE, 2*C_MIN*C_RATE)
+// i.e. minimum charged is 2*C_MIN*C_RATE regardless of contract count
+
+var C_MULT     = 100;    // contract size multiplier
+
+/* ════════════════════════════════════════════════════
+   HELPERS
+   ════════════════════════════════════════════════════ */
+function fmt(n, d) {
+  if (d === undefined) d = 2;
+  return Number(n).toLocaleString('en', {minimumFractionDigits: d, maximumFractionDigits: d});
+}
+
+function set(id, v) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = v;
+  el.classList.remove('pulse');
+  void el.offsetWidth;
+  el.classList.add('pulse');
+}
+
+function rrTxt(r) {
+  if (r >= 3) return '✅ ممتاز — تخاطر بـ 1 للربح ' + fmt(r, 1);
+  if (r >= 2) return '⚡ جيد — نسبة مقبولة للمتداولين';
+  if (r >= 1) return '⚠️ مقبول — يمكن تحسين الهدف أو الوقف';
+  return '❌ ضعيف — المخاطرة أكبر من العائد';
+}
+
+// Stocks: commission for N shares (both sides)
+function sComm(n) {
+  var perSide = Math.max(S_MIN, n * S_RATE);
+  return 2 * perSide * S_ADJ;
+}
+
+// Contracts: commission for N contracts (both sides)
+// Applies the IF logic: minimum floor of C_MIN per side
+function cComm(n) {
+  var perSide = Math.max(C_MIN, n * C_RATE);
+  return 2 * perSide;
+}
+// Note: C_RATE here IS the per-contract fee in $, C_MIN is the floor per side.
+// So: if n*C_RATE < C_MIN → charge 2*C_MIN; else charge 2*n*C_RATE
+// Example: n=10, C_RATE=1.15, C_MIN=1.99 → 10*1.15=11.5 > 1.99 → 2*11.5 = $23 ✅
+// Example: n=1,  C_RATE=1.15, C_MIN=1.99 → 1*1.15=1.15 < 1.99 → 2*1.99 = $3.98
+
+/* ════════════════════════════════════════════════════
+   MAIN CALC
+   ════════════════════════════════════════════════════ */
+function calc() {
+
+  /* ── STOCKS ─────────────────────────────────────── */
+  var sCAP  = parseFloat(document.getElementById('s-cap').value)    || 0;
+  var sRISK = parseFloat(document.getElementById('s-risk').value)   || 0;
+  var sBUY  = parseFloat(document.getElementById('s-buy').value)    || 0;
+  var sSTOP = parseFloat(document.getElementById('s-stop').value)   || 0;
+  var sTGT  = parseFloat(document.getElementById('s-target').value) || 0;
+
+  var sMaxRisk  = sCAP * sRISK / 100;
+  var sDiff     = sBUY - sSTOP;
+  var sLossPct  = (sBUY > 0) ? (sDiff / sBUY * 100) : 0;
+  var sUnits    = (sDiff > 0) ? Math.floor(sMaxRisk / sDiff) : 0;
+  var sTV       = sUnits * sBUY;
+  var sRem      = sCAP - sTV;
+  var sCommAct  = sComm(sUnits);
+
+  var sProfPS   = sTGT - sBUY;
+  var sProfPct  = (sBUY > 0) ? (sProfPS / sBUY * 100) : 0;
+  var sProfTot  = sUnits * sProfPS;
+  var sLossTot  = sUnits * sDiff;
+
+  // Max shares that fit within capital AFTER full commission
+  // total_cost(n) = n*buy + sComm(n) ≤ capital
+  var sMaxN = (sBUY > 0) ? Math.floor(sCAP / (sBUY + S_RATE * 2 * S_ADJ)) : 0;
+  while (sMaxN > 0 && (sMaxN * sBUY + sComm(sMaxN)) > sCAP) { sMaxN--; }
+  while ((sMaxN + 1) * sBUY + sComm(sMaxN + 1) <= sCAP) { sMaxN++; }
+  var sMaxCommFull = sComm(sMaxN);
+  var sMaxProfit   = sMaxN * sProfPS;
+  var sMaxLoss     = sMaxN * sDiff;
+
+  var sRR  = (sDiff > 0 && sProfPS > 0) ? (sProfPS / sDiff) : 0;
+  var sRRR = Math.round(sRR * 10) / 10;
+
+  /* ── CONTRACTS ──────────────────────────────────── */
+  var cCAP  = parseFloat(document.getElementById('c-cap').value)  || 0;
+  var cRISK = parseFloat(document.getElementById('c-risk').value) || 0;
+  var cBUY  = parseFloat(document.getElementById('c-buy').value)  || 0;
+  var cSELL = parseFloat(document.getElementById('c-sell').value) || 0;
+  var cSTOP = parseFloat(document.getElementById('c-stop').value) || 0;
+
+  var cMaxRisk  = cCAP * cRISK / 100;
+  var cDiff     = cBUY - cSTOP;           // price diff per unit
+  var cDiffPC   = cDiff * C_MULT;         // diff per contract ($)
+  // Actual contracts based on risk (same logic as stocks)
+  var cActual   = (cDiffPC > 0) ? Math.floor(cMaxRisk / cDiffPC) : 0;
+  cActual       = Math.max(0, cActual);
+
+  var cTV       = cActual * cBUY * C_MULT;
+  var cRem      = cCAP - cTV;
+  var cCommAct  = cComm(cActual);
+
+  var cProfPct  = (cBUY > 0) ? ((cSELL - cBUY) / cBUY * 100) : 0;
+  var cLossPct  = (cBUY > 0) ? ((cBUY - cSTOP) / cBUY * 100) : 0;
+  var cProfPC   = (cSELL - cBUY) * C_MULT;
+  var cLossPC   = cDiffPC;
+  var cProfTot  = cActual * cProfPC;
+  var cLossTot  = cActual * cLossPC;
+
+  // Max contracts: n * buy * MULT + cComm(n) ≤ capital
+  var cMaxN = 0;
+  if (cBUY > 0) {
+    cMaxN = Math.floor(cCAP / (cBUY * C_MULT + 2 * C_RATE));
+    while (cMaxN > 0 && (cMaxN * cBUY * C_MULT + cComm(cMaxN)) > cCAP) { cMaxN--; }
+    while (((cMaxN + 1) * cBUY * C_MULT + cComm(cMaxN + 1)) <= cCAP) { cMaxN++; }
+  }
+  var cMaxProfit= cMaxN * cProfPC;
+  var cMaxLoss  = cMaxN * cLossPC;
+  var cMaxComm  = cComm(cMaxN);
+
+  var cRR  = (cLossPC > 0) ? (cProfPC / cLossPC) : 0;
+  var cRRR = Math.round(cRR * 10) / 10;
+
+  /* ── DOM UPDATES ────────────────────────────────── */
+
+  // Top bar
+  set('t-sunits', sUnits);
+  set('t-cunits', cActual);
+  set('t-srr',    '1:' + fmt(sRRR, 1));
+  set('t-crr',    '1:' + fmt(cRRR, 1));
+
+  // Stocks results
+  set('s-nd',   sUnits);
+  set('s-tv',   '$' + fmt(sTV));
+  set('s-rem',  '$' + fmt(sRem));
+  set('s-pp2',  fmt(sProfPct) + '%');
+  set('s-lp',   fmt(sLossPct) + '%');
+  set('s-maxr', '$' + fmt(sMaxRisk));
+  set('s-diff', fmt(sDiff));
+  set('s-comm', '$' + fmt(sCommAct));
+
+  // Stocks PnL
+  set('s-pp',  fmt(sProfPct) + '%');
+  set('s-pc',  fmt(sProfPS, 2) + '×' + sUnits);
+  set('s-pu',  '$' + fmt(sProfTot));
+  set('s-ps',  'ر.س ' + fmt(sProfTot * FX));
+  set('s-lpc', '-' + fmt(sLossPct) + '%');
+  set('s-lc',  '-' + fmt(sDiff, 2) + '×' + sUnits);
+  set('s-lu',  '-$' + fmt(sLossTot));
+  set('s-ls',  'ر.س -' + fmt(sLossTot * FX));
+
+  // Stocks max
+  set('s-maxn',  sMaxN);
+  set('s-minfo', 'تكلفة $' + fmt(sMaxN * sBUY) + ' + عمولة $' + fmt(sMaxCommFull));
+  set('s-mpu',   '$' + fmt(sMaxProfit));
+  set('s-mps',   'ر.س ' + fmt(sMaxProfit * FX));
+  set('s-mlu',   '-$' + fmt(sMaxLoss));
+  set('s-mls',   'ر.س -' + fmt(sMaxLoss * FX));
+
+  // Stocks RR
+  set('s-rrv', '1 : ' + fmt(sRRR, 1));
+  set('s-rrd', rrTxt(sRRR));
+
+  // Risk bar
+  var rb = document.getElementById('s-rmfill');
+  if (rb) rb.style.width = Math.min(sRISK / 6 * 100, 100) + '%';
+
+  // Contracts results
+  set('c-nd',   cActual);
+  set('c-tv',   '$' + fmt(cTV));
+  set('c-rem',  '$' + fmt(cRem));
+  set('c-pp',   fmt(cProfPct) + '%');
+  set('c-lp',   fmt(cLossPct) + '%');
+  set('c-maxr', '$' + fmt(cMaxRisk));
+  set('c-diff', fmt(cDiff));
+  set('c-comm', '$' + fmt(cCommAct));
+
+  // Contracts PnL
+  set('c-pc',  fmt(cProfPC / C_MULT, 2) + '×' + cActual);
+  set('c-pu',  '$' + fmt(cProfTot));
+  set('c-ps',  'ر.س ' + fmt(cProfTot * FX));
+  set('c-lpc', '-' + fmt(cLossPct) + '%');
+  set('c-lc',  '-' + fmt(cLossPC / C_MULT, 2) + '×' + cActual);
+  set('c-lu',  '-$' + fmt(cLossTot));
+  set('c-ls',  'ر.س -' + fmt(cLossTot * FX));
+
+  // Contracts max
+  set('c-maxn',  cMaxN);
+  set('c-minfo', 'تكلفة $' + fmt(cMaxN * cBUY * C_MULT) + ' + عمولة $' + fmt(cMaxComm));
+  set('c-mpu',   '$' + fmt(cMaxProfit));
+  set('c-mps',   'ر.س ' + fmt(cMaxProfit * FX));
+  set('c-mlu',   '-$' + fmt(cMaxLoss));
+  set('c-mls',   'ر.س -' + fmt(cMaxLoss * FX));
+
+  // Contracts RR
+  set('c-rrv', '1 : ' + fmt(cRRR, 1));
+  set('c-rrd', rrTxt(cRRR));
+}
+
+calc();
+</script>
+</body>
+</html>
