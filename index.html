@@ -1,35 +1,66 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>حاسبة الأسهم والعقود</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{
+/* ════════════════════════════════════════════════
+   THEME VARIABLES
+   ════════════════════════════════════════════════ */
+[data-theme="dark"] {
   --bg:#0a0e1a;--sur:#111827;--sur2:#1a2235;
   --gold:#f0b429;--gdim:#b8841f;
   --green:#22c55e;--gdark:#166534;
   --red:#ef4444;--rdark:#7f1d1d;
   --blue:#3b82f6;
   --txt:#e2e8f0;--mut:#64748b;--bdr:#1e293b;
+  --shadow:rgba(0,0,0,.45);
+  --toggle-bg:#1e293b;--toggle-knob:#f0b429;
+  --grad1:rgba(240,180,41,.07);--grad2:rgba(34,197,94,.06);--grad3:rgba(59,130,246,.04);
+  --input-bg:#1a2235;
 }
+[data-theme="light"] {
+  --bg:#f0f4f8;--sur:#ffffff;--sur2:#f8fafc;
+  --gold:#c47d00;--gdim:#a86800;
+  --green:#16a34a;--gdark:#bbf7d0;
+  --red:#dc2626;--rdark:#fecaca;
+  --blue:#2563eb;
+  --txt:#1e293b;--mut:#64748b;--bdr:#e2e8f0;
+  --shadow:rgba(0,0,0,.10);
+  --toggle-bg:#e2e8f0;--toggle-knob:#c47d00;
+  --grad1:rgba(240,180,41,.05);--grad2:rgba(22,163,74,.04);--grad3:rgba(37,99,235,.03);
+  --input-bg:#f1f5f9;
+}
+
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
-    radial-gradient(ellipse 70% 50% at 10% 15%,rgba(240,180,41,.07) 0%,transparent 55%),
-    radial-gradient(ellipse 60% 45% at 90% 85%,rgba(34,197,94,.06) 0%,transparent 55%),
-    radial-gradient(ellipse 50% 40% at 50% 50%,rgba(59,130,246,.04) 0%,transparent 60%);}
+    radial-gradient(ellipse 70% 50% at 10% 15%,var(--grad1) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 45% at 90% 85%,var(--grad2) 0%,transparent 55%),
+    radial-gradient(ellipse 50% 40% at 50% 50%,var(--grad3) 0%,transparent 60%);}
 .page{max-width:1300px;margin:0 auto;padding:20px 16px;position:relative;z-index:1;}
 
+/* ── Theme Toggle ── */
+.topbar{display:flex;justify-content:flex-start;align-items:center;margin-bottom:4px;}
+.theme-toggle{display:flex;align-items:center;gap:10px;background:var(--toggle-bg);border:1px solid var(--bdr);border-radius:999px;padding:6px 14px;cursor:pointer;transition:all .3s;user-select:none;}
+.theme-toggle:hover{border-color:var(--gold);}
+.theme-label{font-size:12px;font-weight:700;color:var(--mut);letter-spacing:1px;transition:color .3s;}
+.toggle-track{width:40px;height:22px;background:var(--bdr);border-radius:999px;position:relative;transition:background .3s;}
+[data-theme="light"] .toggle-track{background:var(--gold);}
+.toggle-knob{width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;right:3px;transition:transform .3s,background .3s;box-shadow:0 1px 4px rgba(0,0,0,.3);}
+[data-theme="light"] .toggle-knob{transform:translateX(-18px);background:#fff;}
+.sun-icon,.moon-icon{font-size:14px;}
+
 /* Header */
-header{text-align:center;padding:28px 0 20px;animation:fadeD .6s ease both;}
+header{text-align:center;padding:16px 0 20px;animation:fadeD .6s ease both;}
 .badge{display:inline-block;background:linear-gradient(135deg,var(--gdim),var(--gold));
   color:#000;font-size:20px;font-weight:800;letter-spacing:3px;padding:4px 18px;
   border-radius:20px;margin-bottom:10px;text-transform:uppercase;}
 h1{font-size:clamp(22px,4vw,42px);font-weight:900;
-  background:linear-gradient(135deg,#fff 0%,var(--gold) 55%,#fff 100%);
+  background:linear-gradient(135deg,var(--txt) 0%,var(--gold) 55%,var(--txt) 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;}
 .sub{color:var(--mut);font-size:12px;}
 
@@ -47,12 +78,8 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
   font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--mut);}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--bdr);}
 
-/* ── Two-col grid ── */
-.duo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
-@media(max-width:768px){.duo{grid-template-columns:1fr;}}
-
 /* ── Card ── */
-.card{background:var(--sur);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;animation:fadeU .5s ease both;}
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;animation:fadeU .5s ease both;box-shadow:0 2px 12px var(--shadow);}
 .ch{background:var(--sur2);padding:11px 18px;font-size:10px;font-weight:800;letter-spacing:1.5px;
   color:var(--gold);border-bottom:1px solid var(--bdr);text-transform:uppercase;}
 .cb{padding:16px;}
@@ -61,7 +88,7 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
 .ir{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bdr);gap:10px;}
 .ir:last-child{border-bottom:none;}
 .ir label{font-size:13px;color:var(--mut);flex:1;font-weight:500;}
-.ir input{background:var(--sur2);border:1px solid var(--bdr);border-radius:8px;
+.ir input{background:var(--input-bg);border:1px solid var(--bdr);border-radius:8px;
   color:var(--gold);font-family:'Space Mono',monospace;font-size:15px;font-weight:700;
   padding:7px 12px;width:120px;text-align:center;outline:none;transition:all .2s;}
 .ir input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,180,41,.12);}
@@ -72,6 +99,14 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
 .rl{font-size:14px;color:var(--mut);font-weight:500;}
 .rv{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;}
 
+/* ── Breakeven row ── */
+.be-row{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;
+  margin:8px 0;border-radius:10px;
+  background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(59,130,246,.06));
+  border:1px solid rgba(59,130,246,.25);}
+.be-label{font-size:13px;color:var(--blue);font-weight:700;display:flex;align-items:center;gap:6px;}
+.be-val{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--blue);}
+
 /* ── Big number ── */
 .bign{text-align:center;padding:12px 8px 8px;}
 .bign .n{font-family:'Space Mono',monospace;font-size:clamp(28px,5vw,46px);font-weight:700;line-height:1;}
@@ -81,16 +116,19 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
 .pnl-duo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
 @media(max-width:600px){.pnl-duo{grid-template-columns:1fr;}}
 .pc{border-radius:14px;padding:14px;}
-.pc.profit{background:linear-gradient(135deg,#052e16,#14532d);border:1px solid var(--gdark);}
-.pc.loss{background:linear-gradient(135deg,#450a0a,#7f1d1d);border:1px solid var(--rdark);}
+[data-theme="dark"] .pc.profit{background:linear-gradient(135deg,#052e16,#14532d);border:1px solid var(--gdark);}
+[data-theme="dark"] .pc.loss  {background:linear-gradient(135deg,#450a0a,#7f1d1d);border:1px solid var(--rdark);}
+[data-theme="light"] .pc.profit{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;}
+[data-theme="light"] .pc.loss  {background:linear-gradient(135deg,#fff5f5,#fee2e2);border:1px solid #fca5a5;}
 .ptitle{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;opacity:.8;}
 .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
-.pi{background:rgba(0,0,0,.22);border-radius:9px;padding:9px 10px;text-align:center;}
+.pi{background:rgba(0,0,0,.1);border-radius:9px;padding:9px 10px;text-align:center;}
+[data-theme="light"] .pi{background:rgba(0,0,0,.05);}
 .pl{font-size:12px;opacity:.6;margin-bottom:3px;}
 .pv{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;}
 
 /* ── Max section ── */
-.max-card{background:var(--sur);border:1px solid var(--bdr);border-radius:16px;padding:16px;margin-bottom:14px;}
+.max-card{background:var(--sur);border:1px solid var(--bdr);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 12px var(--shadow);}
 .mh{font-size:10px;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase;font-weight:800;margin-bottom:12px;}
 .mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
 @media(max-width:500px){.mgrid{grid-template-columns:1fr;}}
@@ -101,6 +139,8 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
 .mn{background:var(--sur2);border:1px solid var(--bdr);}
 .mp{background:rgba(34,197,94,.1);border:1px solid var(--gdark);}
 .mr{background:rgba(239,68,68,.1);border:1px solid var(--rdark);}
+[data-theme="light"] .mp{background:rgba(22,163,74,.08);border:1px solid #86efac;}
+[data-theme="light"] .mr{background:rgba(220,38,38,.06);border:1px solid #fca5a5;}
 
 /* ── Risk meter ── */
 .rmeter{background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:16px;margin-bottom:14px;}
@@ -111,9 +151,10 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
   transition:width .5s cubic-bezier(.4,2,.6,1);}
 .rmlabels{display:flex;justify-content:space-between;font-size:9px;color:var(--mut);}
 
-/* ── RR cards ── */
+/* ── RR card ── */
 .rr-card{background:linear-gradient(135deg,#1a1a0a,#2a2200);border:2px solid var(--gold);
   border-radius:16px;padding:20px;text-align:center;position:relative;overflow:hidden;}
+[data-theme="light"] .rr-card{background:linear-gradient(135deg,#fffbeb,#fef3c7);}
 .rr-card::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(ellipse at center,rgba(240,180,41,.1) 0%,transparent 70%);}
 .rrl{font-size:14px;color:var(--gdim);letter-spacing:3px;font-weight:800;text-transform:uppercase;margin-bottom:5px;}
@@ -121,17 +162,32 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
 .rrd{font-size:14px;color:var(--mut);margin-top:5px;}
 
 /* Colors */
-.gc{color:var(--green);}.rc{color:var(--red);}.gldc{color:var(--gold);}.bc{color:var(--blue);}.wc{color:#fff;}
+.gc{color:var(--green);}.rc{color:var(--red);}.gldc{color:var(--gold);}.bc{color:var(--blue);}.wc{color:var(--txt);}
+
+/* ── Warning badge ── */
+.warn-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(239,68,68,.12);
+  border:1px solid rgba(239,68,68,.3);border-radius:6px;padding:2px 8px;
+  font-size:11px;color:var(--red);font-weight:700;margin-top:3px;}
 
 .foot{text-align:center;padding:20px 0 8px;font-size:10px;color:var(--mut);letter-spacing:1px;}
 
+@media(max-width:768px){.duo{grid-template-columns:1fr;}}
+
 @keyframes fadeU{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeD{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.07)}100%{transform:scale(1)}}
 </style>
 </head>
 <body>
 <div class="page">
+
+<!-- ══ Topbar: Theme Toggle ══════════════════════════════════ -->
+<div class="topbar">
+  <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">
+    <span class="moon-icon">🌙</span>
+    <div class="toggle-track"><div class="toggle-knob"></div></div>
+    <span class="sun-icon">☀️</span>
+  </div>
+</div>
 
 <!-- ══ Header ══════════════════════════════════════════════════ -->
 <header>
@@ -148,10 +204,9 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
 
 <!-- ══════════════════════════════════════════════════════════════
      TAB: STOCKS
-     ══════════════════════════════════════════════════════════════ -->
+══════════════════════════════════════════════════════════════ -->
 <div class="tab-panel active" id="tab-stocks">
 
-  <!-- INPUTS -->
   <div class="divider">⚙️ بيانات الصفقة</div>
   <div class="card" style="max-width:560px;margin:0 auto 14px;">
     <div class="ch">📈 أسهم — المدخلات</div>
@@ -164,23 +219,26 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
     </div>
   </div>
 
-  <!-- RESULTS -->
   <div class="divider">📊 نتائج الحساب</div>
   <div class="card" style="max-width:560px;margin:0 auto 14px;">
     <div class="ch">📈 أسهم — نتائج</div>
     <div class="cb">
       <div class="bign"><div class="n gldc" id="s-nd">200</div><div class="s">عدد الأسهم للصفقة</div></div>
+      <!-- Breakeven -->
+      <div class="be-row">
+        <span class="be-label">📍 سعر التعادل (بعد العمولة)</span>
+        <span class="be-val" id="s-be">$4.01</span>
+      </div>
       <div class="rr"><span class="rl">قيمة الصفقة</span>              <span class="rv wc"   id="s-tv">$800.00</span></div>
       <div class="rr"><span class="rl">رأس المال المتبقي</span>        <span class="rv gc"   id="s-rem">$200.00</span></div>
       <div class="rr"><span class="rl">نسبة الربح عند الهدف</span>    <span class="rv gc"   id="s-pp2">15.00%</span></div>
-      <div class="rr"><span class="rl">نسبة الخسارة في الصفقة</span>  <span class="rv rc"   id="s-lp">3.75%</span></div>
+      <div class="rr"><span class="rl">نسبة الخسارة الفعلية (شاملة العمولة)</span>  <span class="rv rc"   id="s-lp">3.75%</span></div>
       <div class="rr"><span class="rl">أقصى مبلغ للمخاطرة</span>      <span class="rv gldc" id="s-maxr">$30.00</span></div>
       <div class="rr"><span class="rl">الفرق (سعر − وقف)</span>       <span class="rv wc"   id="s-diff">0.15</span></div>
       <div class="rr"><span class="rl">عمولة شراء + بيع</span>        <span class="rv gldc" id="s-comm">$2.30</span></div>
     </div>
   </div>
 
-  <!-- PnL -->
   <div class="divider">📈 الربح والخسارة</div>
   <div class="pnl-duo">
     <div class="pc profit">
@@ -188,22 +246,22 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
       <div class="pgrid">
         <div class="pi"><div class="pl">ربح %</div>       <div class="pv gc" id="s-pp">15.00%</div></div>
         <div class="pi"><div class="pl">ربح × أسهم</div>  <div class="pv gc" id="s-pc">0.60×200</div></div>
-        <div class="pi"><div class="pl">صافي $ (بعد خصم العمولة)</div>   <div class="pv gc" id="s-pu">$120.00</div></div>
+        <div class="pi"><div class="pl">صافي $ (بعد العمولة)</div>   <div class="pv gc" id="s-pu">$120.00</div></div>
         <div class="pi"><div class="pl">صافي ر.س</div>  <div class="pv gc" id="s-ps">ر.س 450.00</div></div>
       </div>
     </div>
     <div class="pc loss">
       <div class="ptitle rc">🔴 الخسارة عند الوقف</div>
       <div class="pgrid">
-        <div class="pi"><div class="pl">خسارة %</div>      <div class="pv rc" id="s-lpc">-3.75%</div></div>
+        <div class="pi"><div class="pl">خسارة % (صافي)</div>      <div class="pv rc" id="s-lpc">-3.75%</div></div>
         <div class="pi"><div class="pl">خسارة × أسهم</div><div class="pv rc" id="s-lc">-0.15×200</div></div>
-        <div class="pi"><div class="pl">صافي $ (بعد خصم العمولة)</div>   <div class="pv rc" id="s-lu">-$30.00</div></div>
+        <div class="pi"><div class="pl">صافي $ (بعد العمولة)</div>   <div class="pv rc" id="s-lu">-$30.00</div></div>
         <div class="pi"><div class="pl">صافي ر.س</div>  <div class="pv rc" id="s-ls">ر.س -112.50</div></div>
       </div>
+      <div style="text-align:center;margin-top:8px;" id="s-warn-wrap"></div>
     </div>
   </div>
 
-  <!-- MAX -->
   <div class="divider">🚀 أقصى أسهم ممكنة (بعد خصم العمولة)</div>
   <div class="max-card">
     <div class="mh">📈 أسهم</div>
@@ -226,7 +284,6 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
     </div>
   </div>
 
-  <!-- RR -->
   <div class="divider">⚖️ نسبة العائد إلى المخاطرة</div>
   <div style="max-width:560px;margin:0 auto 20px;">
     <div class="rr-card">
@@ -240,10 +297,9 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
 
 <!-- ══════════════════════════════════════════════════════════════
      TAB: CONTRACTS
-     ══════════════════════════════════════════════════════════════ -->
+══════════════════════════════════════════════════════════════ -->
 <div class="tab-panel" id="tab-contracts">
 
-  <!-- INPUTS -->
   <div class="divider">⚙️ بيانات الصفقة</div>
   <div class="card" style="max-width:560px;margin:0 auto 14px;">
     <div class="ch">📜 عقود — المدخلات</div>
@@ -256,23 +312,26 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
     </div>
   </div>
 
-  <!-- RESULTS -->
   <div class="divider">📊 نتائج الحساب</div>
   <div class="card" style="max-width:560px;margin:0 auto 14px;">
     <div class="ch">📜 عقود — نتائج</div>
     <div class="cb">
       <div class="bign"><div class="n gldc" id="c-nd">12</div><div class="s">عدد العقود الفعلية (مبنى على المخاطرة)</div></div>
+      <!-- Breakeven -->
+      <div class="be-row">
+        <span class="be-label">📍 سعر التعادل (بعد العمولة)</span>
+        <span class="be-val" id="c-be">$0.272</span>
+      </div>
       <div class="rr"><span class="rl">قيمة الصفقة الفعلية</span>            <span class="rv wc"   id="c-tv">$324.00</span></div>
       <div class="rr"><span class="rl">رأس المال المتبقي</span>              <span class="rv gc"   id="c-rem">$676.00</span></div>
       <div class="rr"><span class="rl">نسبة الربح عند الهدف</span>          <span class="rv gc"   id="c-pp">37.04%</span></div>
-      <div class="rr"><span class="rl">نسبة الخسارة عند الوقف</span>        <span class="rv rc"   id="c-lp">14.81%</span></div>
+      <div class="rr"><span class="rl">نسبة الخسارة الفعلية (شاملة العمولة)</span>        <span class="rv rc"   id="c-lp">14.81%</span></div>
       <div class="rr"><span class="rl">أقصى مبلغ للمخاطرة</span>            <span class="rv gldc" id="c-maxr">$50.00</span></div>
       <div class="rr"><span class="rl">الفرق (سعر − وقف)</span>             <span class="rv wc"   id="c-diff">$0.04</span></div>
       <div class="rr"><span class="rl">عمولة شراء + بيع</span>              <span class="rv gldc" id="c-comm">$27.60</span></div>
     </div>
   </div>
 
-  <!-- PnL -->
   <div class="divider">📜 الربح والخسارة</div>
   <div class="pnl-duo">
     <div class="pc profit">
@@ -280,22 +339,22 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
       <div class="pgrid">
         <div class="pi"><div class="pl">ربح %</div>       <div class="pv gc" id="c-pp2">37.04%</div></div>
         <div class="pi"><div class="pl">ربح × عقود</div>  <div class="pv gc" id="c-pc">0.10×12</div></div>
-        <div class="pi"><div class="pl">صافي $ (بعد خصم العمولة)</div>   <div class="pv gc" id="c-pu">$120.00</div></div>
+        <div class="pi"><div class="pl">صافي $ (بعد العمولة)</div>   <div class="pv gc" id="c-pu">$120.00</div></div>
         <div class="pi"><div class="pl">صافي ر.س</div>  <div class="pv gc" id="c-ps">ر.س 450.00</div></div>
       </div>
     </div>
     <div class="pc loss">
       <div class="ptitle rc">🔴 الخسارة عند الوقف</div>
       <div class="pgrid">
-        <div class="pi"><div class="pl">خسارة %</div>      <div class="pv rc" id="c-lpc">-14.81%</div></div>
+        <div class="pi"><div class="pl">خسارة % (صافي)</div>      <div class="pv rc" id="c-lpc">-14.81%</div></div>
         <div class="pi"><div class="pl">خسارة × عقود</div><div class="pv rc" id="c-lc">-0.04×12</div></div>
-        <div class="pi"><div class="pl">صافي $ (بعد خصم العمولة)</div>   <div class="pv rc" id="c-lu">-$48.00</div></div>
+        <div class="pi"><div class="pl">صافي $ (بعد العمولة)</div>   <div class="pv rc" id="c-lu">-$48.00</div></div>
         <div class="pi"><div class="pl">صافي ر.س</div>  <div class="pv rc" id="c-ls">ر.س -180.00</div></div>
       </div>
+      <div style="text-align:center;margin-top:8px;" id="c-warn-wrap"></div>
     </div>
   </div>
 
-  <!-- MAX -->
   <div class="divider">🚀 أقصى عقود ممكنة (بعد خصم العمولة)</div>
   <div class="max-card">
     <div class="mh">📜 عقود</div>
@@ -318,7 +377,6 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
     </div>
   </div>
 
-  <!-- RR -->
   <div class="divider">⚖️ نسبة العائد إلى المخاطرة</div>
   <div style="max-width:560px;margin:0 auto 20px;">
     <div class="rr-card">
@@ -331,38 +389,36 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
 </div><!-- /tab-contracts -->
 
 <div class="foot">⚡ حاسبة أسهم / عقود للمتداولين المحترفين • إدارة المخاطر هي أساس النجاح</div>
-</div>
+</div><!-- /page -->
 
 <script>
+/* ════════════════════════════════════════════════════
+   THEME TOGGLE
+   ════════════════════════════════════════════════════ */
+function toggleTheme() {
+  var html = document.documentElement;
+  var current = html.getAttribute('data-theme');
+  html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+}
+
 /* ════════════════════════════════════════════════════
    TAB SWITCHING
    ════════════════════════════════════════════════════ */
 function switchTab(tab) {
-  var panels = document.querySelectorAll('.tab-panel');
-  var btns   = document.querySelectorAll('.tab-btn');
-  panels.forEach(function(p){ p.classList.remove('active'); });
-  btns.forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
   document.getElementById('tab-' + tab).classList.add('active');
   var idx = tab === 'stocks' ? 0 : 1;
-  btns[idx].classList.add('active');
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
 }
 
 /* ════════════════════════════════════════════════════
-   CONSTANTS — all hidden from UI
+   CONSTANTS
    ════════════════════════════════════════════════════ */
-var FX         = 3.75;   // USD → SAR exchange rate (fixed)
-
-// Stocks commission constants
-var S_RATE     = 0.005;  // $ per share
-var S_MIN      = 1.00;   // minimum $ per side (buy OR sell)
-var S_ADJ      = 1.15;   // adjustment multiplier (to include VAT)
-
-// Contracts commission constants
-var C_RATE     = 1.00;   // $ per contract per side
-var C_MIN      = 1.99;   // minimum $ per side (buy OR sell)
-var C_ADJ      = 1.15;   // adjustment multiplier (to include VAT)
-
-var C_MULT     = 100;    // contract size multiplier
+var FX     = 3.75;
+var S_RATE = 0.005; var S_MIN = 1.00; var S_ADJ = 1.15;
+var C_RATE = 1.00;  var C_MIN = 1.99; var C_ADJ = 1.15;
+var C_MULT = 100;
 
 /* ════════════════════════════════════════════════════
    HELPERS
@@ -371,16 +427,10 @@ function fmt(n, d) {
   if (d === undefined) d = 2;
   return Number(n).toLocaleString('en', {minimumFractionDigits: d, maximumFractionDigits: d});
 }
-
 function set(id, v) {
   var el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = v;
-  el.classList.remove('pulse');
-  void el.offsetWidth;
-  el.classList.add('pulse');
+  if (el) el.textContent = v;
 }
-
 function rrTxt(r) {
   if (r >= 3) return '✅ ممتاز — تخاطر بـ 1 للربح ' + fmt(r, 1);
   if (r >= 2) return '⚡ جيد — نسبة مقبولة للمتداولين';
@@ -388,17 +438,11 @@ function rrTxt(r) {
   return '❌ ضعيف — المخاطرة أكبر من العائد';
 }
 
-// Stocks: commission for N shares (both sides)
-function sComm(n) {
-  var perSide = Math.max(S_MIN, n * S_RATE);
-  return 2 * perSide * S_ADJ;
-}
-
-// Contracts: commission for N contracts (both sides)
-function cComm(n) {
-  var perSide = Math.max(C_MIN, n * C_RATE);
-  return 2 * perSide * C_ADJ;
-}
+// Commission per side + both sides
+function sCommOneSide(n) { return Math.max(S_MIN, n * S_RATE) * S_ADJ; }
+function sComm(n)        { return 2 * sCommOneSide(n); }
+function cCommOneSide(n) { return Math.max(C_MIN, n * C_RATE) * C_ADJ; }
+function cComm(n)        { return 2 * cCommOneSide(n); }
 
 /* ════════════════════════════════════════════════════
    MAIN CALC
@@ -412,29 +456,49 @@ function calc() {
   var sSTOP = parseFloat(document.getElementById('s-stop').value)   || 0;
   var sTGT  = parseFloat(document.getElementById('s-target').value) || 0;
 
-  var sMaxRisk  = sCAP * sRISK / 100;
-  var sDiff     = sBUY - sSTOP;
-  var sLossPct  = (sBUY > 0) ? (sDiff / sBUY * 100) : 0;
-  var sUnits    = (sDiff > 0) ? Math.floor(sMaxRisk / sDiff) : 0;
-  // Cap: ensure total cost doesn't exceed capital
-  if (sBUY > 0) {
+  var sMaxRisk = sCAP * sRISK / 100;
+  var sDiff    = sBUY - sSTOP;
+
+  // ── FIX: find max units such that net loss (incl. commission) ≤ maxRisk
+  // net loss = units * sDiff + comm(units) ≤ sMaxRisk
+  // Use binary-search / iterative approach from above
+  var sUnits = 0;
+  if (sDiff > 0 && sBUY > 0) {
+    // Start from risk-based estimate
+    sUnits = Math.floor(sMaxRisk / sDiff);
+    // Reduce until net loss including commission ≤ maxRisk AND fits in capital
+    while (sUnits > 0 && (sUnits * sDiff + sComm(sUnits)) > sMaxRisk) { sUnits--; }
+    // Also cap by available capital
     while (sUnits > 0 && (sUnits * sBUY + sComm(sUnits)) > sCAP) { sUnits--; }
   }
-  var sTV       = sUnits * sBUY;
-  var sRem      = sCAP - sTV;
-  var sCommAct  = sComm(sUnits);
 
-  var sProfPS   = sTGT - sBUY;
-  var sProfPct  = (sBUY > 0) ? (sProfPS / sBUY * 100) : 0;
-  var sProfTot  = sUnits * sProfPS - sCommAct;   // صافي بعد خصم العمولة
-  var sLossTot  = sUnits * sDiff   + sCommAct;   // إجمالي بعد إضافة العمولة
+  var sTV      = sUnits * sBUY;
+  var sRem     = sCAP - sTV;
+  var sCommAct = sComm(sUnits);
 
-  var sMaxN = (sBUY > 0) ? Math.floor(sCAP / (sBUY + S_RATE * 2 * S_ADJ)) : 0;
-  while (sMaxN > 0 && (sMaxN * sBUY + sComm(sMaxN)) > sCAP) { sMaxN--; }
-  while ((sMaxN + 1) * sBUY + sComm(sMaxN + 1) <= sCAP) { sMaxN++; }
+  // Breakeven: price where total sale proceeds = buy cost + total commission
+  // units * BE = units * sBUY + sComm(units)
+  // BE = sBUY + sComm(units) / units
+  var sBE = (sUnits > 0) ? (sBUY + sComm(sUnits) / sUnits) : sBUY;
+
+  var sProfPS  = sTGT - sBUY;
+  var sProfPct = (sBUY > 0) ? (sProfPS / sBUY * 100) : 0;
+  var sProfTot = sUnits * sProfPS - sCommAct;   // صافي بعد خصم العمولة
+
+  // Actual net loss including commission
+  var sLossTot    = sUnits * sDiff + sCommAct;
+  var sLossActPct = (sCAP > 0) ? (sLossTot / sCAP * 100) : 0;
+
+  // Max units using full capital (budget-based)
+  var sMaxN = 0;
+  if (sBUY > 0) {
+    sMaxN = Math.floor(sCAP / (sBUY + 2 * S_RATE * S_ADJ + (2 * S_MIN * S_ADJ) / 1000));
+    while (sMaxN > 0 && (sMaxN * sBUY + sComm(sMaxN)) > sCAP) { sMaxN--; }
+    while (((sMaxN + 1) * sBUY + sComm(sMaxN + 1)) <= sCAP) { sMaxN++; }
+  }
   var sMaxCommFull = sComm(sMaxN);
-  var sMaxProfit   = sMaxN * sProfPS - sMaxCommFull;  // صافي بعد خصم العمولة
-  var sMaxLoss     = sMaxN * sDiff   + sMaxCommFull;  // إجمالي بعد إضافة العمولة
+  var sMaxProfit   = sMaxN * sProfPS - sMaxCommFull;
+  var sMaxLoss     = sMaxN * sDiff   + sMaxCommFull;
 
   var sRR  = (sDiff > 0 && sProfPS > 0) ? (sProfPS / sDiff) : 0;
   var sRRR = Math.round(sRR * 10) / 10;
@@ -446,25 +510,35 @@ function calc() {
   var cSELL = parseFloat(document.getElementById('c-sell').value) || 0;
   var cSTOP = parseFloat(document.getElementById('c-stop').value) || 0;
 
-  var cMaxRisk  = cCAP * cRISK / 100;
-  var cDiff     = cBUY - cSTOP;
-  var cDiffPC   = cDiff * C_MULT;
-  var cActual   = (cDiffPC > 0) ? Math.floor(cMaxRisk / cDiffPC) : 0;
-  cActual       = Math.max(0, cActual);
-  // Cap: ensure total cost doesn't exceed capital
-  if (cBUY > 0) {
+  var cMaxRisk = cCAP * cRISK / 100;
+  var cDiff    = cBUY - cSTOP;
+  var cDiffPC  = cDiff * C_MULT;
+
+  // ── FIX: find contracts such that net loss (incl. commission) ≤ maxRisk
+  var cActual = 0;
+  if (cDiffPC > 0 && cBUY > 0) {
+    cActual = Math.floor(cMaxRisk / cDiffPC);
+    // Reduce until net loss including commission ≤ maxRisk
+    while (cActual > 0 && (cActual * cDiffPC + cComm(cActual)) > cMaxRisk) { cActual--; }
+    // Also cap by available capital
     while (cActual > 0 && (cActual * cBUY * C_MULT + cComm(cActual)) > cCAP) { cActual--; }
   }
-  var cTV       = cActual * cBUY * C_MULT;
-  var cRem      = cCAP - cTV;
-  var cCommAct  = cComm(cActual);
+  cActual = Math.max(0, cActual);
 
-  var cProfPct  = (cBUY > 0) ? ((cSELL - cBUY) / cBUY * 100) : 0;
-  var cLossPct  = (cBUY > 0) ? ((cBUY - cSTOP) / cBUY * 100) : 0;
-  var cProfPC   = (cSELL - cBUY) * C_MULT;
-  var cLossPC   = cDiffPC;
-  var cProfTot  = cActual * cProfPC - cCommAct;   // صافي بعد خصم العمولة
-  var cLossTot  = cActual * cLossPC + cCommAct;   // إجمالي بعد إضافة العمولة
+  var cTV      = cActual * cBUY * C_MULT;
+  var cRem     = cCAP - cTV;
+  var cCommAct = cComm(cActual);
+
+  // Breakeven: BE = cBUY + cComm(n) / (n * C_MULT)
+  var cBE = (cActual > 0) ? (cBUY + cComm(cActual) / (cActual * C_MULT)) : cBUY;
+
+  var cProfPct = (cBUY > 0) ? ((cSELL - cBUY) / cBUY * 100) : 0;
+  var cLossPct = (cBUY > 0) ? ((cBUY - cSTOP) / cBUY * 100) : 0;
+  var cProfPC  = (cSELL - cBUY) * C_MULT;
+  var cLossPC  = cDiffPC;
+  var cProfTot = cActual * cProfPC - cCommAct;
+  var cLossTot = cActual * cLossPC + cCommAct;
+  var cLossActPct = (cCAP > 0) ? (cLossTot / cCAP * 100) : 0;
 
   var cMaxN = 0;
   if (cBUY > 0) {
@@ -472,36 +546,43 @@ function calc() {
     while (cMaxN > 0 && (cMaxN * cBUY * C_MULT + cComm(cMaxN)) > cCAP) { cMaxN--; }
     while (((cMaxN + 1) * cBUY * C_MULT + cComm(cMaxN + 1)) <= cCAP) { cMaxN++; }
   }
-  var cMaxProfit= cMaxN * cProfPC - cComm(cMaxN);  // صافي بعد خصم العمولة
-  var cMaxLoss  = cMaxN * cLossPC + cComm(cMaxN);  // إجمالي بعد إضافة العمولة
-  var cMaxComm  = cComm(cMaxN);
+  var cMaxProfit = cMaxN * cProfPC - cComm(cMaxN);
+  var cMaxLoss   = cMaxN * cLossPC + cComm(cMaxN);
+  var cMaxComm   = cComm(cMaxN);
 
   var cRR  = (cLossPC > 0) ? (cProfPC / cLossPC) : 0;
   var cRRR = Math.round(cRR * 10) / 10;
 
   /* ── DOM UPDATES ────────────────────────────────── */
 
-  // Stocks results
+  // Stocks
   set('s-nd',   sUnits);
+  set('s-be',   '$' + fmt(sBE, 3));
   set('s-tv',   '$' + fmt(sTV));
   set('s-rem',  '$' + fmt(sRem));
   set('s-pp2',  fmt(sProfPct) + '%');
-  set('s-lp',   fmt(sLossPct) + '%');
+  set('s-lp',   fmt(sLossActPct, 2) + '% (~$' + fmt(sLossTot) + ')');
   set('s-maxr', '$' + fmt(sMaxRisk));
   set('s-diff', fmt(sDiff));
   set('s-comm', '$' + fmt(sCommAct));
 
-  // Stocks PnL
   set('s-pp',  fmt(sProfPct) + '%');
   set('s-pc',  fmt(sProfPS, 2) + '×' + sUnits);
   set('s-pu',  '$' + fmt(sProfTot));
   set('s-ps',  'ر.س ' + fmt(sProfTot * FX));
-  set('s-lpc', '-' + fmt(sLossPct) + '%');
+  set('s-lpc', '-' + fmt(sLossActPct, 2) + '%');
   set('s-lc',  '-' + fmt(sDiff, 2) + '×' + sUnits);
   set('s-lu',  '-$' + fmt(sLossTot));
   set('s-ls',  'ر.س -' + fmt(sLossTot * FX));
 
-  // Stocks max
+  // Warning if actual loss > risk%
+  var sWarnWrap = document.getElementById('s-warn-wrap');
+  if (sLossActPct > sRISK + 0.01 && sUnits > 0) {
+    sWarnWrap.innerHTML = '<span class="warn-badge">⚠️ الخسارة الفعلية ' + fmt(sLossActPct,2) + '% (تأثير العمولة)</span>';
+  } else {
+    sWarnWrap.innerHTML = '';
+  }
+
   set('s-maxn',  sMaxN);
   set('s-minfo', 'تكلفة $' + fmt(sMaxN * sBUY) + ' + عمولة $' + fmt(sMaxCommFull));
   set('s-mpu',   '$' + fmt(sMaxProfit));
@@ -509,31 +590,36 @@ function calc() {
   set('s-mlu',   '-$' + fmt(sMaxLoss));
   set('s-mls',   'ر.س -' + fmt(sMaxLoss * FX));
 
-  // Stocks RR
   set('s-rrv', '1 : ' + fmt(sRRR, 1));
   set('s-rrd', rrTxt(sRRR));
 
-  // Contracts results
+  // Contracts
   set('c-nd',   cActual);
+  set('c-be',   '$' + fmt(cBE, 4));
   set('c-tv',   '$' + fmt(cTV));
   set('c-rem',  '$' + fmt(cRem));
   set('c-pp',   fmt(cProfPct) + '%');
-  set('c-lp',   fmt(cLossPct) + '%');
+  set('c-lp',   fmt(cLossActPct, 2) + '% (~$' + fmt(cLossTot) + ')');
   set('c-maxr', '$' + fmt(cMaxRisk));
   set('c-diff', fmt(cDiff));
   set('c-comm', '$' + fmt(cCommAct));
 
-  // Contracts PnL
   set('c-pp2', fmt(cProfPct) + '%');
   set('c-pc',  fmt(cProfPC / C_MULT, 2) + '×' + cActual);
   set('c-pu',  '$' + fmt(cProfTot));
   set('c-ps',  'ر.س ' + fmt(cProfTot * FX));
-  set('c-lpc', '-' + fmt(cLossPct) + '%');
+  set('c-lpc', '-' + fmt(cLossActPct, 2) + '%');
   set('c-lc',  '-' + fmt(cLossPC / C_MULT, 2) + '×' + cActual);
   set('c-lu',  '-$' + fmt(cLossTot));
   set('c-ls',  'ر.س -' + fmt(cLossTot * FX));
 
-  // Contracts max
+  var cWarnWrap = document.getElementById('c-warn-wrap');
+  if (cLossActPct > cRISK + 0.01 && cActual > 0) {
+    cWarnWrap.innerHTML = '<span class="warn-badge">⚠️ الخسارة الفعلية ' + fmt(cLossActPct,2) + '% (تأثير العمولة)</span>';
+  } else {
+    cWarnWrap.innerHTML = '';
+  }
+
   set('c-maxn',  cMaxN);
   set('c-minfo', 'تكلفة $' + fmt(cMaxN * cBUY * C_MULT) + ' + عمولة $' + fmt(cMaxComm));
   set('c-mpu',   '$' + fmt(cMaxProfit));
@@ -541,7 +627,6 @@ function calc() {
   set('c-mlu',   '-$' + fmt(cMaxLoss));
   set('c-mls',   'ر.س -' + fmt(cMaxLoss * FX));
 
-  // Contracts RR
   set('c-rrv', '1 : ' + fmt(cRRR, 1));
   set('c-rrd', rrTxt(cRRR));
 }
