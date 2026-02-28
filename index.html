@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" data-theme="dark">
+<html lang="ar" dir="rtl" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>حاسبة الأسهم والعقود</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* ════════════════════════════════════════════════
-   THEME VARIABLES
-   ════════════════════════════════════════════════ */
 [data-theme="dark"] {
   --bg:#0a0e1a;--sur:#111827;--sur2:#1a2235;
   --gold:#f0b429;--gdim:#b8841f;
@@ -41,13 +38,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     radial-gradient(ellipse 70% 50% at 10% 15%,var(--grad1) 0%,transparent 55%),
     radial-gradient(ellipse 60% 45% at 90% 85%,var(--grad2) 0%,transparent 55%),
     radial-gradient(ellipse 50% 40% at 50% 50%,var(--grad3) 0%,transparent 60%);}
-.page{max-width:1300px;margin:0 auto;padding:20px 16px;position:relative;z-index:1;}
+.page{max-width:1300px;margin:0 auto;padding:16px;position:relative;z-index:1;}
 
-/* ── Theme Toggle ── */
+/* Theme Toggle */
 .topbar{display:flex;justify-content:flex-start;align-items:center;margin-bottom:4px;}
 .theme-toggle{display:flex;align-items:center;gap:10px;background:var(--toggle-bg);border:1px solid var(--bdr);border-radius:999px;padding:6px 14px;cursor:pointer;transition:all .3s;user-select:none;}
 .theme-toggle:hover{border-color:var(--gold);}
-.theme-label{font-size:12px;font-weight:700;color:var(--mut);letter-spacing:1px;transition:color .3s;}
 .toggle-track{width:40px;height:22px;background:var(--bdr);border-radius:999px;position:relative;transition:background .3s;}
 [data-theme="light"] .toggle-track{background:var(--gold);}
 .toggle-knob{width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;right:3px;transition:transform .3s,background .3s;box-shadow:0 1px 4px rgba(0,0,0,.3);}
@@ -55,7 +51,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .sun-icon,.moon-icon{font-size:14px;}
 
 /* Header */
-header{text-align:center;padding:16px 0 20px;animation:fadeD .6s ease both;}
+header{text-align:center;padding:12px 0 16px;animation:fadeD .6s ease both;}
 .badge{display:inline-block;background:linear-gradient(135deg,var(--gdim),var(--gold));
   color:#000;font-size:20px;font-weight:800;letter-spacing:3px;padding:4px 18px;
   border-radius:20px;margin-bottom:10px;text-transform:uppercase;}
@@ -64,86 +60,91 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;}
 .sub{color:var(--mut);font-size:12px;}
 
-/* ── Tabs ── */
-.tabs{display:flex;gap:8px;margin-bottom:20px;background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:6px;}
-.tab-btn{flex:1;padding:12px 20px;border:none;border-radius:10px;font-family:'Tajawal',sans-serif;
+/* Tabs */
+.tabs{display:flex;gap:8px;margin-bottom:16px;background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:6px;}
+.tab-btn{flex:1;padding:11px 20px;border:none;border-radius:10px;font-family:'Tajawal',sans-serif;
   font-size:16px;font-weight:700;cursor:pointer;transition:all .25s;background:transparent;color:var(--mut);letter-spacing:.5px;}
 .tab-btn.active{background:linear-gradient(135deg,var(--gdim),var(--gold));color:#000;}
 .tab-btn:hover:not(.active){background:var(--sur2);color:var(--txt);}
 .tab-panel{display:none;}
 .tab-panel.active{display:block;}
 
-/* ── Section divider ── */
-.divider{display:flex;align-items:center;gap:10px;margin:18px 0 12px;
+/* Section divider */
+.divider{display:flex;align-items:center;gap:10px;margin:14px 0 10px;
   font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--mut);}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--bdr);}
 
-/* ── Card ── */
+/* Card */
 .card{background:var(--sur);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;animation:fadeU .5s ease both;box-shadow:0 2px 12px var(--shadow);}
-.ch{background:var(--sur2);padding:11px 18px;font-size:10px;font-weight:800;letter-spacing:1.5px;
+.ch{background:var(--sur2);padding:9px 14px;font-size:10px;font-weight:800;letter-spacing:1.5px;
   color:var(--gold);border-bottom:1px solid var(--bdr);text-transform:uppercase;}
-.cb{padding:16px;}
+/* FIX 4: reduced padding, bigger font */
+.cb{padding:10px 14px;}
 
-/* ── Input row ── */
-.ir{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bdr);gap:10px;}
+/* Side-by-side layout for input+result cards - FIX 3 */
+.side-by-side{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;align-items:center;}
+@media(max-width:780px){.side-by-side{grid-template-columns:1fr;}}
+
+/* Input row - FIX 4: tighter padding, bigger label font */
+.ir{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bdr);gap:10px;}
 .ir:last-child{border-bottom:none;}
-.ir label{font-size:13px;color:var(--mut);flex:1;font-weight:500;}
+.ir label{font-size:14px;color:var(--mut);flex:1;font-weight:500;}
 .ir input{background:var(--input-bg);border:1px solid var(--bdr);border-radius:8px;
   color:var(--gold);font-family:'Space Mono',monospace;font-size:15px;font-weight:700;
-  padding:7px 12px;width:120px;text-align:center;outline:none;transition:all .2s;}
+  padding:6px 10px;width:110px;text-align:center;outline:none;transition:all .2s;}
 .ir input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,180,41,.12);}
 
-/* ── Result row ── */
-.rr{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bdr);}
+/* Result row - FIX 4: tighter padding, bigger font */
+.rr{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bdr);}
 .rr:last-child{border-bottom:none;}
 .rl{font-size:14px;color:var(--mut);font-weight:500;}
 .rv{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;}
 
-/* ── Breakeven row ── */
-.be-row{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;
-  margin:8px 0;border-radius:10px;
+/* Breakeven row */
+.be-row{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;
+  margin:6px 0;border-radius:10px;
   background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(59,130,246,.06));
   border:1px solid rgba(59,130,246,.25);}
 .be-label{font-size:13px;color:var(--blue);font-weight:700;display:flex;align-items:center;gap:6px;}
 .be-val{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--blue);}
 
-/* ── Big number ── */
-.bign{text-align:center;padding:12px 8px 8px;}
-.bign .n{font-family:'Space Mono',monospace;font-size:clamp(28px,5vw,46px);font-weight:700;line-height:1;}
-.bign .s{font-size:14px;color:var(--mut);margin-top:4px;}
+/* Big number */
+.bign{text-align:center;padding:8px 8px 6px;}
+.bign .n{font-family:'Space Mono',monospace;font-size:clamp(26px,5vw,42px);font-weight:700;line-height:1;}
+.bign .s{font-size:13px;color:var(--mut);margin-top:3px;}
 
-/* ── PnL cards ── */
+/* PnL cards */
 .pnl-duo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
 @media(max-width:600px){.pnl-duo{grid-template-columns:1fr;}}
-.pc{border-radius:14px;padding:14px;}
+.pc{border-radius:14px;padding:12px;}
 [data-theme="dark"] .pc.profit{background:linear-gradient(135deg,#052e16,#14532d);border:1px solid var(--gdark);}
 [data-theme="dark"] .pc.loss  {background:linear-gradient(135deg,#450a0a,#7f1d1d);border:1px solid var(--rdark);}
 [data-theme="light"] .pc.profit{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;}
 [data-theme="light"] .pc.loss  {background:linear-gradient(135deg,#fff5f5,#fee2e2);border:1px solid #fca5a5;}
-.ptitle{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;opacity:.8;}
-.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
-.pi{background:rgba(0,0,0,.1);border-radius:9px;padding:9px 10px;text-align:center;}
+.ptitle{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:.8;}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.pi{background:rgba(0,0,0,.1);border-radius:9px;padding:7px 8px;text-align:center;}
 [data-theme="light"] .pi{background:rgba(0,0,0,.05);}
-.pl{font-size:12px;opacity:.6;margin-bottom:3px;}
+.pl{font-size:11px;opacity:.6;margin-bottom:2px;}
 .pv{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;}
 
-/* ── Max section ── */
-.max-card{background:var(--sur);border:1px solid var(--bdr);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 12px var(--shadow);}
-.mh{font-size:10px;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase;font-weight:800;margin-bottom:12px;}
+/* Max section */
+.max-card{background:var(--sur);border:1px solid var(--bdr);border-radius:16px;padding:14px;margin-bottom:14px;box-shadow:0 2px 12px var(--shadow);}
+.mh{font-size:10px;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase;font-weight:800;margin-bottom:10px;}
 .mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
 @media(max-width:500px){.mgrid{grid-template-columns:1fr;}}
-.mi{border-radius:11px;padding:12px;text-align:center;}
-.ml{font-size:14px;color:var(--mut);margin-bottom:5px;}
+.mi{border-radius:11px;padding:10px;text-align:center;}
+.ml{font-size:14px;color:var(--mut);margin-bottom:4px;}
 .mv{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;}
-.ms{font-size:14px;color:var(--mut);margin-top:4px;}
+.ms{font-size:13px;color:var(--mut);margin-top:3px;}
 .mn{background:var(--sur2);border:1px solid var(--bdr);}
 .mp{background:rgba(34,197,94,.1);border:1px solid var(--gdark);}
 .mr{background:rgba(239,68,68,.1);border:1px solid var(--rdark);}
 [data-theme="light"] .mp{background:rgba(22,163,74,.08);border:1px solid #86efac;}
 [data-theme="light"] .mr{background:rgba(220,38,38,.06);border:1px solid #fca5a5;}
 
-/* ── Risk meter ── */
-.rmeter{background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:16px;margin-bottom:14px;}
+/* Risk meter */
+.rmeter{background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:14px;margin-bottom:14px;}
 .rmtitle{font-size:10px;color:var(--mut);letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:10px;}
 .rmtrack{background:var(--sur2);border-radius:999px;height:9px;overflow:hidden;margin-bottom:7px;}
 .rmfill{height:100%;border-radius:999px;
@@ -151,27 +152,25 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
   transition:width .5s cubic-bezier(.4,2,.6,1);}
 .rmlabels{display:flex;justify-content:space-between;font-size:9px;color:var(--mut);}
 
-/* ── RR card ── */
+/* RR card */
 .rr-card{background:linear-gradient(135deg,#1a1a0a,#2a2200);border:2px solid var(--gold);
-  border-radius:16px;padding:20px;text-align:center;position:relative;overflow:hidden;}
+  border-radius:16px;padding:18px;text-align:center;position:relative;overflow:hidden;}
 [data-theme="light"] .rr-card{background:linear-gradient(135deg,#fffbeb,#fef3c7);}
 .rr-card::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(ellipse at center,rgba(240,180,41,.1) 0%,transparent 70%);}
 .rrl{font-size:14px;color:var(--gdim);letter-spacing:3px;font-weight:800;text-transform:uppercase;margin-bottom:5px;}
-.rrv{font-family:'Space Mono',monospace;font-size:40px;font-weight:700;color:var(--gold);line-height:1;}
+.rrv{font-family:'Space Mono',monospace;font-size:38px;font-weight:700;color:var(--gold);line-height:1;}
 .rrd{font-size:14px;color:var(--mut);margin-top:5px;}
 
 /* Colors */
 .gc{color:var(--green);}.rc{color:var(--red);}.gldc{color:var(--gold);}.bc{color:var(--blue);}.wc{color:var(--txt);}
 
-/* ── Warning badge ── */
+/* Warning badge */
 .warn-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(239,68,68,.12);
   border:1px solid rgba(239,68,68,.3);border-radius:6px;padding:2px 8px;
   font-size:11px;color:var(--red);font-weight:700;margin-top:3px;}
 
-.foot{text-align:center;padding:20px 0 8px;font-size:10px;color:var(--mut);letter-spacing:1px;}
-
-@media(max-width:768px){.duo{grid-template-columns:1fr;}}
+.foot{text-align:center;padding:16px 0 8px;font-size:10px;color:var(--mut);letter-spacing:1px;}
 
 @keyframes fadeU{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeD{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
@@ -180,7 +179,6 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
 <body>
 <div class="page">
 
-<!-- ══ Topbar: Theme Toggle ══════════════════════════════════ -->
 <div class="topbar">
   <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">
     <span class="moon-icon">🌙</span>
@@ -189,53 +187,51 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
   </div>
 </div>
 
-<!-- ══ Header ══════════════════════════════════════════════════ -->
 <header>
   <div class="badge">⚡ إدارة المخاطر المتقدمة</div>
   <h1>حاسبة الأسهم والعقود</h1>
   <p class="sub">احسب الحجم المثالي للصفقة بناءً على رأس مالك ونسبة المخاطرة</p>
 </header>
 
-<!-- ══ Tabs ════════════════════════════════════════════════════ -->
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('stocks')">📈 الأسهم</button>
   <button class="tab-btn"       onclick="switchTab('contracts')">📜 العقود</button>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     TAB: STOCKS
-══════════════════════════════════════════════════════════════ -->
+<!-- TAB: STOCKS -->
 <div class="tab-panel active" id="tab-stocks">
 
-  <div class="divider">⚙️ بيانات الصفقة</div>
-  <div class="card" style="max-width:560px;margin:0 auto 14px;">
-    <div class="ch">📈 أسهم — المدخلات</div>
-    <div class="cb">
-      <div class="ir"><label>رأس المال $</label>     <input type="number" id="s-cap"    value="1000" step="100"  oninput="calc()"></div>
-      <div class="ir"><label>نسبة المخاطرة %</label> <input type="number" id="s-risk"   value="3"    step="0.1"  oninput="calc()"></div>
-      <div class="ir"><label>سعر الشراء $</label>    <input type="number" id="s-buy"    value="4.00" step="0.01" oninput="calc()"></div>
-      <div class="ir"><label>وقف الخسارة $</label>   <input type="number" id="s-stop"   value="3.85" step="0.01" oninput="calc()"></div>
-      <div class="ir"><label>سعر الهدف $</label>     <input type="number" id="s-target" value="4.60" step="0.01" oninput="calc()"></div>
-    </div>
-  </div>
+  <div class="divider">⚙️ بيانات الصفقة ونتائج الحساب</div>
 
-  <div class="divider">📊 نتائج الحساب</div>
-  <div class="card" style="max-width:560px;margin:0 auto 14px;">
-    <div class="ch">📈 أسهم — نتائج</div>
-    <div class="cb">
-      <div class="bign"><div class="n gldc" id="s-nd">200</div><div class="s">عدد الأسهم للصفقة</div></div>
-      <!-- Breakeven -->
-      <div class="be-row">
-        <span class="be-label">📍 سعر التعادل (بعد العمولة)</span>
-        <span class="be-val" id="s-be">$4.01</span>
+  <!-- FIX 3: side-by-side layout -->
+  <div class="side-by-side">
+    <div class="card">
+      <div class="ch">📈 أسهم — المدخلات</div>
+      <div class="cb">
+        <div class="ir"><label>رأس المال $</label>     <input type="number" id="s-cap"    value="1000" step="100"  oninput="calc()" onblur="fixLeadingZero(this)"></div>
+        <div class="ir"><label>نسبة المخاطرة %</label> <input type="number" id="s-risk"   value="3"    step="0.1"  oninput="calc()" onblur="fixLeadingZero(this)"></div>
+        <div class="ir"><label>سعر الشراء $</label>    <input type="number" id="s-buy"    value="4.00" step="0.01" oninput="calc()" onblur="fixLeadingZero(this)"></div>
+        <div class="ir"><label>وقف الخسارة $</label>   <input type="number" id="s-stop"   value="3.85" step="0.01" oninput="calc()" onblur="fixLeadingZero(this)"></div>
+        <div class="ir"><label>سعر الهدف $</label>     <input type="number" id="s-target" value="4.60" step="0.01" oninput="calc()" onblur="fixLeadingZero(this)"></div>
       </div>
-      <div class="rr"><span class="rl">قيمة الصفقة</span>              <span class="rv wc"   id="s-tv">$800.00</span></div>
-      <div class="rr"><span class="rl">رأس المال المتبقي</span>        <span class="rv gc"   id="s-rem">$200.00</span></div>
-      <div class="rr"><span class="rl">نسبة الربح عند الهدف</span>    <span class="rv gc"   id="s-pp2">15.00%</span></div>
-      <div class="rr"><span class="rl">نسبة الخسارة الفعلية (شاملة العمولة)</span>  <span class="rv rc"   id="s-lp">3.75%</span></div>
-      <div class="rr"><span class="rl">أقصى مبلغ للمخاطرة</span>      <span class="rv gldc" id="s-maxr">$30.00</span></div>
-      <div class="rr"><span class="rl">الفرق (سعر − وقف)</span>       <span class="rv wc"   id="s-diff">0.15</span></div>
-      <div class="rr"><span class="rl">عمولة شراء + بيع</span>        <span class="rv gldc" id="s-comm">$2.30</span></div>
+    </div>
+
+    <div class="card">
+      <div class="ch">📈 أسهم — نتائج</div>
+      <div class="cb">
+        <div class="bign"><div class="n gldc" id="s-nd">200</div><div class="s">عدد الأسهم للصفقة</div></div>
+        <div class="be-row">
+          <span class="be-label">📍 سعر التعادل (بعد العمولة)</span>
+          <span class="be-val" id="s-be">$4.01</span>
+        </div>
+        <div class="rr"><span class="rl">قيمة الصفقة</span>              <span class="rv wc"   id="s-tv">$800.00</span></div>
+        <div class="rr"><span class="rl">رأس المال المتبقي</span>        <span class="rv gc"   id="s-rem">$200.00</span></div>
+        <div class="rr"><span class="rl">نسبة الربح عند الهدف</span>    <span class="rv gc"   id="s-pp2">15.00%</span></div>
+        <div class="rr"><span class="rl">نسبة الخسارة الفعلية</span>    <span class="rv rc"   id="s-lp">3.75%</span></div>
+        <div class="rr"><span class="rl">أقصى مبلغ للمخاطرة</span>      <span class="rv gldc" id="s-maxr">$30.00</span></div>
+        <div class="rr"><span class="rl">الفرق (سعر − وقف)</span>       <span class="rv wc"   id="s-diff">0.15</span></div>
+        <div class="rr"><span class="rl">عمولة شراء + بيع</span>        <span class="rv gldc" id="s-comm">$2.30</span></div>
+      </div>
     </div>
   </div>
 
@@ -295,40 +291,40 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
 
 </div><!-- /tab-stocks -->
 
-<!-- ══════════════════════════════════════════════════════════════
-     TAB: CONTRACTS
-══════════════════════════════════════════════════════════════ -->
+<!-- TAB: CONTRACTS -->
 <div class="tab-panel" id="tab-contracts">
 
-  <div class="divider">⚙️ بيانات الصفقة</div>
-  <div class="card" style="max-width:560px;margin:0 auto 14px;">
-    <div class="ch">📜 عقود — المدخلات</div>
-    <div class="cb">
-      <div class="ir"><label>رأس المال $</label>     <input type="number" id="c-cap"  value="1000"  step="50"   oninput="calc()"></div>
-      <div class="ir"><label>نسبة المخاطرة %</label> <input type="number" id="c-risk" value="5"    step="0.1"  oninput="calc()"></div>
-      <div class="ir"><label>سعر الشراء $</label>    <input type="number" id="c-buy"  value="0.27" step="0.01" oninput="calc()"></div>
-      <div class="ir"><label>وقف الخسارة $</label>   <input type="number" id="c-stop" value="0.23" step="0.01" oninput="calc()"></div>
-      <div class="ir"><label>سعر الهدف $</label>     <input type="number" id="c-sell" value="0.37" step="0.01" oninput="calc()"></div>
-    </div>
-  </div>
+  <div class="divider">⚙️ بيانات الصفقة ونتائج الحساب</div>
 
-  <div class="divider">📊 نتائج الحساب</div>
-  <div class="card" style="max-width:560px;margin:0 auto 14px;">
-    <div class="ch">📜 عقود — نتائج</div>
-    <div class="cb">
-      <div class="bign"><div class="n gldc" id="c-nd">12</div><div class="s">عدد العقود الفعلية (مبنى على المخاطرة)</div></div>
-      <!-- Breakeven -->
-      <div class="be-row">
-        <span class="be-label">📍 سعر التعادل (بعد العمولة)</span>
-        <span class="be-val" id="c-be">$0.272</span>
+  <!-- FIX 3: side-by-side layout -->
+  <div class="side-by-side">
+    <div class="card">
+      <div class="ch">📜 عقود — المدخلات</div>
+      <div class="cb">
+        <div class="ir"><label>رأس المال $</label>     <input type="number" id="c-cap"  value="1000"  step="50"   oninput="calc()" onblur="fixLeadingZero(this)"></div>
+        <div class="ir"><label>نسبة المخاطرة %</label> <input type="number" id="c-risk" value="5"    step="0.1"  oninput="calc()" onblur="fixLeadingZero(this)"></div>
+        <div class="ir"><label>سعر الشراء $</label>    <input type="number" id="c-buy"  value="0.27" step="0.01" oninput="calc()" onblur="fixLeadingZero(this)"></div>
+        <div class="ir"><label>وقف الخسارة $</label>   <input type="number" id="c-stop" value="0.23" step="0.01" oninput="calc()" onblur="fixLeadingZero(this)"></div>
+        <div class="ir"><label>سعر الهدف $</label>     <input type="number" id="c-sell" value="0.37" step="0.01" oninput="calc()" onblur="fixLeadingZero(this)"></div>
       </div>
-      <div class="rr"><span class="rl">قيمة الصفقة الفعلية</span>            <span class="rv wc"   id="c-tv">$324.00</span></div>
-      <div class="rr"><span class="rl">رأس المال المتبقي</span>              <span class="rv gc"   id="c-rem">$676.00</span></div>
-      <div class="rr"><span class="rl">نسبة الربح عند الهدف</span>          <span class="rv gc"   id="c-pp">37.04%</span></div>
-      <div class="rr"><span class="rl">نسبة الخسارة الفعلية (شاملة العمولة)</span>        <span class="rv rc"   id="c-lp">14.81%</span></div>
-      <div class="rr"><span class="rl">أقصى مبلغ للمخاطرة</span>            <span class="rv gldc" id="c-maxr">$50.00</span></div>
-      <div class="rr"><span class="rl">الفرق (سعر − وقف)</span>             <span class="rv wc"   id="c-diff">$0.04</span></div>
-      <div class="rr"><span class="rl">عمولة شراء + بيع</span>              <span class="rv gldc" id="c-comm">$27.60</span></div>
+    </div>
+
+    <div class="card">
+      <div class="ch">📜 عقود — نتائج</div>
+      <div class="cb">
+        <div class="bign"><div class="n gldc" id="c-nd">12</div><div class="s">عدد العقود الفعلية (مبنى على المخاطرة)</div></div>
+        <div class="be-row">
+          <span class="be-label">📍 سعر التعادل (بعد العمولة)</span>
+          <span class="be-val" id="c-be">$0.28</span>
+        </div>
+        <div class="rr"><span class="rl">قيمة الصفقة الفعلية</span>            <span class="rv wc"   id="c-tv">$324.00</span></div>
+        <div class="rr"><span class="rl">رأس المال المتبقي</span>              <span class="rv gc"   id="c-rem">$676.00</span></div>
+        <div class="rr"><span class="rl">نسبة الربح عند الهدف</span>          <span class="rv gc"   id="c-pp">37.04%</span></div>
+        <div class="rr"><span class="rl">نسبة الخسارة الفعلية</span>          <span class="rv rc"   id="c-lp">14.81%</span></div>
+        <div class="rr"><span class="rl">أقصى مبلغ للمخاطرة</span>            <span class="rv gldc" id="c-maxr">$50.00</span></div>
+        <div class="rr"><span class="rl">الفرق (سعر − وقف)</span>             <span class="rv wc"   id="c-diff">$0.04</span></div>
+        <div class="rr"><span class="rl">عمولة شراء + بيع</span>              <span class="rv gldc" id="c-comm">$27.60</span></div>
+      </div>
     </div>
   </div>
 
@@ -392,18 +388,14 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
 </div><!-- /page -->
 
 <script>
-/* ════════════════════════════════════════════════════
-   THEME TOGGLE
-   ════════════════════════════════════════════════════ */
+/* THEME TOGGLE */
 function toggleTheme() {
   var html = document.documentElement;
   var current = html.getAttribute('data-theme');
   html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
 }
 
-/* ════════════════════════════════════════════════════
-   TAB SWITCHING
-   ════════════════════════════════════════════════════ */
+/* TAB SWITCHING */
 function switchTab(tab) {
   document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
@@ -412,17 +404,21 @@ function switchTab(tab) {
   document.querySelectorAll('.tab-btn')[idx].classList.add('active');
 }
 
-/* ════════════════════════════════════════════════════
-   CONSTANTS
-   ════════════════════════════════════════════════════ */
+/* FIX 2: fix leading zero on blur - ensures "0.4" not ".4" */
+function fixLeadingZero(input) {
+  var v = parseFloat(input.value);
+  if (!isNaN(v)) {
+    input.value = v.toFixed(2);
+  }
+}
+
+/* CONSTANTS */
 var FX     = 3.75;
 var S_RATE = 0.005; var S_MIN = 1.00; var S_ADJ = 1.15;
 var C_RATE = 1.00;  var C_MIN = 1.99; var C_ADJ = 1.15;
 var C_MULT = 100;
 
-/* ════════════════════════════════════════════════════
-   HELPERS
-   ════════════════════════════════════════════════════ */
+/* HELPERS */
 function fmt(n, d) {
   if (d === undefined) d = 2;
   return Number(n).toLocaleString('en', {minimumFractionDigits: d, maximumFractionDigits: d});
@@ -438,18 +434,19 @@ function rrTxt(r) {
   return '❌ ضعيف — المخاطرة أكبر من العائد';
 }
 
-// Commission per side + both sides
 function sCommOneSide(n) { return Math.max(S_MIN, n * S_RATE) * S_ADJ; }
 function sComm(n)        { return 2 * sCommOneSide(n); }
 function cCommOneSide(n) { return Math.max(C_MIN, n * C_RATE) * C_ADJ; }
 function cComm(n)        { return 2 * cCommOneSide(n); }
 
-/* ════════════════════════════════════════════════════
-   MAIN CALC
-   ════════════════════════════════════════════════════ */
+/* FIX 1: breakeven rounded to 2 decimal places */
+function fmtBE(val) {
+  return '$' + fmt(val, 2);
+}
+
 function calc() {
 
-  /* ── STOCKS ─────────────────────────────────────── */
+  /* STOCKS */
   var sCAP  = parseFloat(document.getElementById('s-cap').value)    || 0;
   var sRISK = parseFloat(document.getElementById('s-risk').value)   || 0;
   var sBUY  = parseFloat(document.getElementById('s-buy').value)    || 0;
@@ -459,16 +456,10 @@ function calc() {
   var sMaxRisk = sCAP * sRISK / 100;
   var sDiff    = sBUY - sSTOP;
 
-  // ── FIX: find max units such that net loss (incl. commission) ≤ maxRisk
-  // net loss = units * sDiff + comm(units) ≤ sMaxRisk
-  // Use binary-search / iterative approach from above
   var sUnits = 0;
   if (sDiff > 0 && sBUY > 0) {
-    // Start from risk-based estimate
     sUnits = Math.floor(sMaxRisk / sDiff);
-    // Reduce until net loss including commission ≤ maxRisk AND fits in capital
     while (sUnits > 0 && (sUnits * sDiff + sComm(sUnits)) > sMaxRisk) { sUnits--; }
-    // Also cap by available capital
     while (sUnits > 0 && (sUnits * sBUY + sComm(sUnits)) > sCAP) { sUnits--; }
   }
 
@@ -476,20 +467,16 @@ function calc() {
   var sRem     = sCAP - sTV;
   var sCommAct = sComm(sUnits);
 
-  // Breakeven: price where total sale proceeds = buy cost + total commission
-  // units * BE = units * sBUY + sComm(units)
-  // BE = sBUY + sComm(units) / units
+  // FIX 1: BE rounded to 2dp
   var sBE = (sUnits > 0) ? (sBUY + sComm(sUnits) / sUnits) : sBUY;
 
   var sProfPS  = sTGT - sBUY;
   var sProfPct = (sBUY > 0) ? (sProfPS / sBUY * 100) : 0;
-  var sProfTot = sUnits * sProfPS - sCommAct;   // صافي بعد خصم العمولة
+  var sProfTot = sUnits * sProfPS - sCommAct;
 
-  // Actual net loss including commission
   var sLossTot    = sUnits * sDiff + sCommAct;
   var sLossActPct = (sCAP > 0) ? (sLossTot / sCAP * 100) : 0;
 
-  // Max units using full capital (budget-based)
   var sMaxN = 0;
   if (sBUY > 0) {
     sMaxN = Math.floor(sCAP / (sBUY + 2 * S_RATE * S_ADJ + (2 * S_MIN * S_ADJ) / 1000));
@@ -503,7 +490,7 @@ function calc() {
   var sRR  = (sDiff > 0 && sProfPS > 0) ? (sProfPS / sDiff) : 0;
   var sRRR = Math.round(sRR * 10) / 10;
 
-  /* ── CONTRACTS ──────────────────────────────────── */
+  /* CONTRACTS */
   var cCAP  = parseFloat(document.getElementById('c-cap').value)  || 0;
   var cRISK = parseFloat(document.getElementById('c-risk').value) || 0;
   var cBUY  = parseFloat(document.getElementById('c-buy').value)  || 0;
@@ -514,13 +501,10 @@ function calc() {
   var cDiff    = cBUY - cSTOP;
   var cDiffPC  = cDiff * C_MULT;
 
-  // ── FIX: find contracts such that net loss (incl. commission) ≤ maxRisk
   var cActual = 0;
   if (cDiffPC > 0 && cBUY > 0) {
     cActual = Math.floor(cMaxRisk / cDiffPC);
-    // Reduce until net loss including commission ≤ maxRisk
     while (cActual > 0 && (cActual * cDiffPC + cComm(cActual)) > cMaxRisk) { cActual--; }
-    // Also cap by available capital
     while (cActual > 0 && (cActual * cBUY * C_MULT + cComm(cActual)) > cCAP) { cActual--; }
   }
   cActual = Math.max(0, cActual);
@@ -529,7 +513,7 @@ function calc() {
   var cRem     = cCAP - cTV;
   var cCommAct = cComm(cActual);
 
-  // Breakeven: BE = cBUY + cComm(n) / (n * C_MULT)
+  // FIX 1: BE rounded to 2dp
   var cBE = (cActual > 0) ? (cBUY + cComm(cActual) / (cActual * C_MULT)) : cBUY;
 
   var cProfPct = (cBUY > 0) ? ((cSELL - cBUY) / cBUY * 100) : 0;
@@ -553,11 +537,11 @@ function calc() {
   var cRR  = (cLossPC > 0) ? (cProfPC / cLossPC) : 0;
   var cRRR = Math.round(cRR * 10) / 10;
 
-  /* ── DOM UPDATES ────────────────────────────────── */
+  /* DOM UPDATES */
 
   // Stocks
   set('s-nd',   sUnits);
-  set('s-be',   '$' + fmt(sBE, 3));
+  set('s-be',   fmtBE(sBE));  // FIX 1: 2dp
   set('s-tv',   '$' + fmt(sTV));
   set('s-rem',  '$' + fmt(sRem));
   set('s-pp2',  fmt(sProfPct) + '%');
@@ -575,7 +559,6 @@ function calc() {
   set('s-lu',  '-$' + fmt(sLossTot));
   set('s-ls',  'ر.س -' + fmt(sLossTot * FX));
 
-  // Warning if actual loss > risk%
   var sWarnWrap = document.getElementById('s-warn-wrap');
   if (sLossActPct > sRISK + 0.01 && sUnits > 0) {
     sWarnWrap.innerHTML = '<span class="warn-badge">⚠️ الخسارة الفعلية ' + fmt(sLossActPct,2) + '% (تأثير العمولة)</span>';
@@ -595,7 +578,7 @@ function calc() {
 
   // Contracts
   set('c-nd',   cActual);
-  set('c-be',   '$' + fmt(cBE, 4));
+  set('c-be',   fmtBE(cBE));  // FIX 1: 2dp
   set('c-tv',   '$' + fmt(cTV));
   set('c-rem',  '$' + fmt(cRem));
   set('c-pp',   fmt(cProfPct) + '%');
