@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" data-theme="light">
 <head>
@@ -93,6 +94,11 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
   color:var(--gold);font-family:'Space Mono',monospace;font-size:15px;font-weight:700;
   padding:6px 10px;width:110px;text-align:center;outline:none;transition:all .2s;}
 .ir input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,180,41,.12);}
+
+/* Commission settings bar */
+.comm-bar{display:flex;flex-wrap:wrap;gap:14px;background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:8px 14px;margin-bottom:6px;box-shadow:0 2px 12px var(--shadow);}
+.comm-bar .ir{flex:1;min-width:240px;border-bottom:none;}
+.comm-bar .ir input{width:100px;}
 
 /* Result row - FIX 4: tighter padding, bigger font */
 .rr{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bdr);}
@@ -201,6 +207,11 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
 <!-- TAB: STOCKS -->
 <div class="tab-panel active" id="tab-stocks">
 
+  <div class="comm-bar">
+    <div class="ir"><label>عمولة السهم $ (لكل جهة)</label>          <input type="number" id="s-rate"    value="0.005" step="0.001" min="0" oninput="calc()" onblur="fixRaw(this)"></div>
+    <div class="ir"><label>الحد الأدنى للعمولة $ (لكل جهة)</label>   <input type="number" id="s-minc"    value="1.00"  step="0.01"  min="0" oninput="calc()" onblur="fixRaw(this)"></div>
+  </div>
+
   <div class="divider">⚙️ بيانات الصفقة ونتائج الحساب</div>
 
   <!-- FIX 3: side-by-side layout -->
@@ -293,6 +304,11 @@ h1{font-size:clamp(22px,4vw,42px);font-weight:900;
 
 <!-- TAB: CONTRACTS -->
 <div class="tab-panel" id="tab-contracts">
+
+  <div class="comm-bar">
+    <div class="ir"><label>عمولة العقد $ (لكل جهة)</label>          <input type="number" id="c-rate"    value="1.00"  step="0.01"  min="0" oninput="calc()" onblur="fixRaw(this)"></div>
+    <div class="ir"><label>الحد الأدنى للعمولة $ (لكل جهة)</label>   <input type="number" id="c-minc"    value="1.99"  step="0.01"  min="0" oninput="calc()" onblur="fixRaw(this)"></div>
+  </div>
 
   <div class="divider">⚙️ بيانات الصفقة ونتائج الحساب</div>
 
@@ -412,9 +428,33 @@ function fixLeadingZero(input) {
   }
 }
 
+/* keep raw precision for commission fields (no forced 2 decimals) */
+function fixRaw(input) {
+  var v = parseFloat(input.value);
+  if (!isNaN(v)) input.value = String(v);
+}
+
+/* ENTER -> next field (within the same tab, in DOM order) */
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter' || e.isComposing) return;
+  var el = e.target;
+  if (!el || el.tagName !== 'INPUT' || el.type !== 'number') return;
+  var panel = el.closest('.tab-panel');
+  if (!panel) return;
+  e.preventDefault();
+  var fields = Array.prototype.slice.call(panel.querySelectorAll('input[type="number"]'));
+  var i = fields.indexOf(el);
+  if (i > -1 && i < fields.length - 1) {
+    fields[i + 1].focus();
+    fields[i + 1].select();
+  } else {
+    el.blur();
+  }
+});
+
 /* CONSTANTS */
 var FX     = 3.75;
-var S_RATE = 0.005; var S_MIN = 1.00; var S_ADJ = 1.15;
+var S_RATE = 0.005; var S_MIN = 1.00; var S_ADJ = 1.15;   /* RATE/MIN are refreshed from the inputs in calc() */
 var C_RATE = 1.00;  var C_MIN = 1.99; var C_ADJ = 1.15;
 var C_MULT = 100;
 
@@ -444,7 +484,18 @@ function fmtBE(val) {
   return '$' + fmt(val, 2);
 }
 
+function readNum(id, fallback) {
+  var v = parseFloat(document.getElementById(id).value);
+  return (isNaN(v) || v < 0) ? fallback : v;
+}
+
 function calc() {
+
+  /* COMMISSION SETTINGS (from the top fields) */
+  S_RATE = readNum('s-rate', 0);
+  S_MIN  = readNum('s-minc', 0);
+  C_RATE = readNum('c-rate', 0);
+  C_MIN  = readNum('c-minc', 0);
 
   /* STOCKS */
   var sCAP  = parseFloat(document.getElementById('s-cap').value)    || 0;
